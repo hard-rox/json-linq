@@ -26,7 +26,7 @@ public static class PathResolver
         }
 
         JsonNode? current = root;
-        foreach (var segment in path.Split('.', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+        foreach (string segment in path.Split('.', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
         {
             if (current is JsonObject obj)
             {
@@ -36,7 +36,7 @@ public static class PathResolver
 
             if (current is JsonArray arr)
             {
-                if (!int.TryParse(segment, out var index))
+                if (!int.TryParse(segment, out int index))
                 {
                     throw new InvalidPathException($"Path segment '{segment}' is not a valid array index.");
                 }

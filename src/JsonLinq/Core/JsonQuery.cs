@@ -26,8 +26,8 @@ public sealed class JsonQuery : IJsonQueryable
     /// </summary>
     public static JsonQuery Parse(string json)
     {
-        var root = JsonParser.Parse(json);
-        var seed = new List<JsonNode?> { root }.AsReadOnly();
+        JsonNode root = JsonParser.Parse(json);
+        ReadOnlyCollection<JsonNode?> seed = new List<JsonNode?> { root }.AsReadOnly();
         return new JsonQuery(root, seed, seed, new QueryEngine(new Matcher()));
     }
 
@@ -36,8 +36,8 @@ public sealed class JsonQuery : IJsonQueryable
     /// </summary>
     public static JsonQuery ParseFile(string filePath)
     {
-        var root = JsonParser.ParseFile(filePath);
-        var seed = new List<JsonNode?> { root }.AsReadOnly();
+        JsonNode root = JsonParser.ParseFile(filePath);
+        ReadOnlyCollection<JsonNode?> seed = new List<JsonNode?> { root }.AsReadOnly();
         return new JsonQuery(root, seed, seed, new QueryEngine(new Matcher()));
     }
 
@@ -46,16 +46,16 @@ public sealed class JsonQuery : IJsonQueryable
     /// </summary>
     public static async Task<JsonQuery> ParseFileAsync(string filePath, CancellationToken cancellationToken = default)
     {
-        var root = await JsonParser.ParseFileAsync(filePath, cancellationToken).ConfigureAwait(false);
-        var seed = new List<JsonNode?> { root }.AsReadOnly();
+        JsonNode root = await JsonParser.ParseFileAsync(filePath, cancellationToken).ConfigureAwait(false);
+        ReadOnlyCollection<JsonNode?> seed = new List<JsonNode?> { root }.AsReadOnly();
         return new JsonQuery(root, seed, seed, new QueryEngine(new Matcher()));
     }
 
     /// <inheritdoc />
     public JsonQuery From(string path)
     {
-        var node = PathResolver.Resolve(_root, path);
-        var collection = ToCollection(node);
+        JsonNode? node = PathResolver.Resolve(_root, path);
+        ReadOnlyCollection<JsonNode?> collection = ToCollection(node);
         return new JsonQuery(_root, collection, collection, _engine);
     }
 
@@ -72,15 +72,15 @@ public sealed class JsonQuery : IJsonQueryable
     /// <inheritdoc />
     public JsonQuery Where(string field, string op, object? value)
     {
-        var filtered = _engine.Filter(_result, new JsonCondition(field, op, value));
+        IReadOnlyList<JsonNode?> filtered = _engine.Filter(_result, new JsonCondition(field, op, value));
         return new JsonQuery(_root, _scope, filtered, _engine);
     }
 
     /// <inheritdoc />
     public JsonQuery OrWhere(string field, string op, object? value)
     {
-        var filteredFromScope = _engine.Filter(_scope, new JsonCondition(field, op, value));
-        var union = _result
+        IReadOnlyList<JsonNode?> filteredFromScope = _engine.Filter(_scope, new JsonCondition(field, op, value));
+        ReadOnlyCollection<JsonNode?> union = _result
             .Concat(filteredFromScope)
             .DistinctBy(x => x?.ToJsonString() ?? string.Empty)
             .ToList()
@@ -94,7 +94,7 @@ public sealed class JsonQuery : IJsonQueryable
     /// </summary>
     public JsonQuery OrderBy(string field)
     {
-        var sorted = _engine.Sort(_result, field, descending: false);
+        IReadOnlyList<JsonNode?> sorted = _engine.Sort(_result, field, descending: false);
         return new JsonQuery(_root, _scope, sorted, _engine);
     }
 
@@ -103,7 +103,7 @@ public sealed class JsonQuery : IJsonQueryable
     /// </summary>
     public JsonQuery OrderByDescending(string field)
     {
-        var sorted = _engine.Sort(_result, field, descending: true);
+        IReadOnlyList<JsonNode?> sorted = _engine.Sort(_result, field, descending: true);
         return new JsonQuery(_root, _scope, sorted, _engine);
     }
 
@@ -112,8 +112,8 @@ public sealed class JsonQuery : IJsonQueryable
     /// </summary>
     public JsonQuery GroupBy(string field)
     {
-        var grouped = _engine.GroupBy(_result, field);
-        var nodes = grouped
+        IReadOnlyDictionary<string, IReadOnlyList<JsonNode?>> grouped = _engine.GroupBy(_result, field);
+        ReadOnlyCollection<JsonNode?> nodes = grouped
             .Select(x => new JsonObject
             {
                 ["key"] = x.Key,
@@ -136,13 +136,13 @@ public sealed class JsonQuery : IJsonQueryable
             throw new ArgumentOutOfRangeException(nameof(size), "Chunk size must be greater than zero.");
         }
 
-        var list = new List<JsonNode?>();
-        for (var i = 0; i < _result.Count; i += size)
+        List<JsonNode?> list = new List<JsonNode?>();
+        for (int i = 0; i < _result.Count; i += size)
         {
             list.Add(new JsonArray(_result.Skip(i).Take(size).Select(x => x?.DeepClone()).ToArray()));
         }
 
-        var readOnly = list.AsReadOnly();
+        ReadOnlyCollection<JsonNode?> readOnly = list.AsReadOnly();
         return new JsonQuery(_root, readOnly, readOnly, _engine);
     }
 
@@ -151,9 +151,9 @@ public sealed class JsonQuery : IJsonQueryable
     /// </summary>
     public JsonQuery Copy()
     {
-        var newRoot = _root.DeepClone();
-        var newScope = _scope.Select(x => x?.DeepClone()).ToList().AsReadOnly();
-        var newResult = _result.Select(x => x?.DeepClone()).ToList().AsReadOnly();
+        JsonNode newRoot = _root.DeepClone();
+        ReadOnlyCollection<JsonNode?> newScope = _scope.Select(x => x?.DeepClone()).ToList().AsReadOnly();
+        ReadOnlyCollection<JsonNode?> newResult = _result.Select(x => x?.DeepClone()).ToList().AsReadOnly();
         return new JsonQuery(newRoot, newScope, newResult, _engine);
     }
 
@@ -162,7 +162,7 @@ public sealed class JsonQuery : IJsonQueryable
     /// </summary>
     public JsonQuery Distinct()
     {
-        var distinct = _result
+        ReadOnlyCollection<JsonNode?> distinct = _result
             .DistinctBy(x => x?.ToJsonString() ?? string.Empty)
             .ToList()
             .AsReadOnly();
@@ -235,13 +235,13 @@ public sealed class JsonQuery : IJsonQueryable
     /// </summary>
     public JsonQuery Select(params string[] fields)
     {
-        var projected = _result
+        ReadOnlyCollection<JsonNode?> projected = _result
             .Select(node =>
             {
-                var obj = new JsonObject();
-                foreach (var field in fields)
+                JsonObject obj = new JsonObject();
+                foreach (string field in fields)
                 {
-                    var value = PathResolver.Resolve(node, field);
+                    JsonNode? value = PathResolver.Resolve(node, field);
                     if (value is not null)
                     {
                         obj[field] = value.DeepClone();
@@ -266,7 +266,7 @@ public sealed class JsonQuery : IJsonQueryable
             throw new ArgumentOutOfRangeException(nameof(count), "Take count must be non-negative.");
         }
 
-        var taken = _result.Take(count).ToList().AsReadOnly();
+        ReadOnlyCollection<JsonNode?> taken = _result.Take(count).ToList().AsReadOnly();
         return new JsonQuery(_root, _scope, taken, _engine);
     }
 
@@ -280,7 +280,7 @@ public sealed class JsonQuery : IJsonQueryable
             throw new ArgumentOutOfRangeException(nameof(count), "Skip count must be non-negative.");
         }
 
-        var remaining = _result.Skip(count).ToList().AsReadOnly();
+        ReadOnlyCollection<JsonNode?> remaining = _result.Skip(count).ToList().AsReadOnly();
         return new JsonQuery(_root, _scope, remaining, _engine);
     }
 

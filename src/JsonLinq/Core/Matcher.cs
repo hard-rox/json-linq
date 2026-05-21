@@ -10,10 +10,10 @@ public sealed class Matcher : IMatcher
     /// <inheritdoc />
     public bool IsMatch(JsonNode? item, JsonCondition condition)
     {
-        var node = PathResolver.Resolve(item, condition.Field);
-        var left = JsonValueHelper.ToComparable(node);
-        var right = JsonValueHelper.ToComparable(condition.Value);
-        var op = condition.Operator.Trim().ToLowerInvariant();
+        JsonNode? node = PathResolver.Resolve(item, condition.Field);
+        object? left = JsonValueHelper.ToComparable(node);
+        object? right = JsonValueHelper.ToComparable(condition.Value);
+        string op = condition.Operator.Trim().ToLowerInvariant();
 
         return op switch
         {
@@ -40,8 +40,8 @@ public sealed class Matcher : IMatcher
         // Convert.ChangeType truncation (e.g. double 999.9 -> long 999)
         if (IsNumeric(left) && IsNumeric(right))
         {
-            var l = Convert.ToDecimal(left);
-            var r = Convert.ToDecimal(right);
+            decimal l = Convert.ToDecimal(left);
+            decimal r = Convert.ToDecimal(right);
             return l.CompareTo(r);
         }
 

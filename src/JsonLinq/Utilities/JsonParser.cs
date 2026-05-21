@@ -52,7 +52,7 @@ public static class JsonParser
             throw new FileNotFoundException($"JSON file not found: {path}", path);
         }
 
-        var text = await File.ReadAllTextAsync(path, cancellationToken).ConfigureAwait(false);
+        string text = await File.ReadAllTextAsync(path, cancellationToken).ConfigureAwait(false);
         return Parse(text);
     }
 }

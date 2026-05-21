@@ -8,7 +8,7 @@ public sealed class JsonParserTests
     [Fact]
     public void Parse_ValidJson_ReturnsNode()
     {
-        var node = JsonParser.Parse("{\"a\":1}");
+        JsonNode node = JsonParser.Parse("{\"a\":1}");
         Assert.NotNull(node);
         Assert.Equal(1, node["a"]?.GetValue<int>());
     }

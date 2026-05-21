@@ -15,7 +15,7 @@ public sealed class EndToEndTests : IClassFixture<SampleDataFixture>
     [Fact]
     public void ComplexQueryChain_ReturnsExpectedRows()
     {
-        var rows = JsonQuery.Parse(_fixture.Json)
+        IReadOnlyList<JsonNode?> rows = JsonQuery.Parse(_fixture.Json)
             .From("users")
             .Where("department", "==", "Engineering")
             .OrderByDescending("salary")

@@ -14,27 +14,27 @@ internal static class JsonValueHelper
 
     private static object? ConvertJsonValue(JsonValue value)
     {
-        if (value.TryGetValue<bool>(out var boolValue))
+        if (value.TryGetValue<bool>(out bool boolValue))
         {
             return boolValue;
         }
 
-        if (value.TryGetValue<long>(out var longValue))
+        if (value.TryGetValue<long>(out long longValue))
         {
             return longValue;
         }
 
-        if (value.TryGetValue<double>(out var doubleValue))
+        if (value.TryGetValue<double>(out double doubleValue))
         {
             return doubleValue;
         }
 
-        if (value.TryGetValue<decimal>(out var decimalValue))
+        if (value.TryGetValue<decimal>(out decimal decimalValue))
         {
             return decimalValue;
         }
 
-        if (value.TryGetValue<string>(out var stringValue))
+        if (value.TryGetValue<string>(out string? stringValue))
         {
             return stringValue;
         }

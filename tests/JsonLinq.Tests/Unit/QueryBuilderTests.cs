@@ -10,7 +10,7 @@ public sealed class QueryBuilderTests
     [Fact]
     public void WhereAndCount_ReturnsExpectedCount()
     {
-        var count = JsonQuery.Parse(_fixture.Json)
+        int count = JsonQuery.Parse(_fixture.Json)
             .From("users")
             .Where("department", "==", "Engineering")
             .Count();
@@ -21,7 +21,7 @@ public sealed class QueryBuilderTests
     [Fact]
     public void SumAndAvg_ReturnExpectedValues()
     {
-        var query = JsonQuery.Parse(_fixture.Json).From("users");
+        JsonQuery query = JsonQuery.Parse(_fixture.Json).From("users");
 
         Assert.Equal(2700M, query.Sum("salary"));
         Assert.Equal(900M, query.Average("salary"));
@@ -30,7 +30,7 @@ public sealed class QueryBuilderTests
     [Fact]
     public void GroupBy_ReturnsGroupedRows()
     {
-        var grouped = JsonQuery.Parse(_fixture.Json)
+        IReadOnlyList<JsonNode?> grouped = JsonQuery.Parse(_fixture.Json)
             .From("users")
             .GroupBy("department")
             .Get();

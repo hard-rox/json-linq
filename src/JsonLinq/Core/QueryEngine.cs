@@ -23,7 +23,7 @@ public sealed class QueryEngine(IMatcher matcher)
     /// </summary>
     public IReadOnlyList<JsonNode?> Sort(IEnumerable<JsonNode?> source, string path, bool descending = false)
     {
-        var sorted = descending
+        IOrderedEnumerable<JsonNode?> sorted = descending
             ? source.OrderByDescending(x => JsonValueHelper.ToComparable(PathResolver.Resolve(x, path)))
             : source.OrderBy(x => JsonValueHelper.ToComparable(PathResolver.Resolve(x, path)));
 
@@ -35,7 +35,7 @@ public sealed class QueryEngine(IMatcher matcher)
     /// </summary>
     public IReadOnlyDictionary<string, IReadOnlyList<JsonNode?>> GroupBy(IEnumerable<JsonNode?> source, string path)
     {
-        var grouped = source
+        Dictionary<string, IReadOnlyList<JsonNode?>> grouped = source
             .GroupBy(x => JsonValueHelper.ToComparable(PathResolver.Resolve(x, path))?.ToString() ?? string.Empty)
             .ToDictionary(
                 x => x.Key,
@@ -50,7 +50,7 @@ public sealed class QueryEngine(IMatcher matcher)
     /// </summary>
     public decimal Sum(IEnumerable<JsonNode?> source, string path)
     {
-        var values = SelectNumbers(source, path);
+        IEnumerable<decimal> values = SelectNumbers(source, path);
         return values.Sum();
     }
 
@@ -59,7 +59,7 @@ public sealed class QueryEngine(IMatcher matcher)
     /// </summary>
     public decimal Avg(IEnumerable<JsonNode?> source, string path)
     {
-        var values = SelectNumbers(source, path).ToList();
+        List<decimal> values = SelectNumbers(source, path).ToList();
         return values.Count == 0 ? 0M : values.Average();
     }
 
@@ -68,7 +68,7 @@ public sealed class QueryEngine(IMatcher matcher)
     /// </summary>
     public decimal Max(IEnumerable<JsonNode?> source, string path)
     {
-        var values = SelectNumbers(source, path).ToList();
+        List<decimal> values = SelectNumbers(source, path).ToList();
         return values.Count == 0 ? 0M : values.Max();
     }
 
@@ -77,33 +77,33 @@ public sealed class QueryEngine(IMatcher matcher)
     /// </summary>
     public decimal Min(IEnumerable<JsonNode?> source, string path)
     {
-        var values = SelectNumbers(source, path).ToList();
+        List<decimal> values = SelectNumbers(source, path).ToList();
         return values.Count == 0 ? 0M : values.Min();
     }
 
     private static IEnumerable<decimal> SelectNumbers(IEnumerable<JsonNode?> source, string path)
     {
-        foreach (var node in source)
+        foreach (JsonNode? node in source)
         {
-            var valueNode = string.IsNullOrWhiteSpace(path) ? node : PathResolver.Resolve(node, path);
+            JsonNode? valueNode = string.IsNullOrWhiteSpace(path) ? node : PathResolver.Resolve(node, path);
             if (valueNode is not JsonValue value)
             {
                 continue;
             }
 
-            if (value.TryGetValue<decimal>(out var decimalValue))
+            if (value.TryGetValue<decimal>(out decimal decimalValue))
             {
                 yield return decimalValue;
                 continue;
             }
 
-            if (value.TryGetValue<double>(out var doubleValue))
+            if (value.TryGetValue<double>(out double doubleValue))
             {
                 yield return (decimal)doubleValue;
                 continue;
             }
 
-            if (value.TryGetValue<long>(out var longValue))
+            if (value.TryGetValue<long>(out long longValue))
             {
                 yield return longValue;
                 continue;

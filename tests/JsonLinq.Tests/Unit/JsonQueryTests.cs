@@ -12,7 +12,7 @@ public sealed class JsonQueryTests
     [Fact]
     public void FromAndFirstOrDefault_ReturnsFirstUser()
     {
-        var first = JsonQuery.Parse(_fixture.Json).From("users").FirstOrDefault();
+        JsonNode? first = JsonQuery.Parse(_fixture.Json).From("users").FirstOrDefault();
 
         Assert.NotNull(first);
         Assert.Equal("Ava", JsonTestHelper.GetString(first, "name"));
@@ -21,7 +21,7 @@ public sealed class JsonQueryTests
     [Fact]
     public void LastOrDefault_ReturnsLastUser()
     {
-        var last = JsonQuery.Parse(_fixture.Json).From("users").LastOrDefault();
+        JsonNode? last = JsonQuery.Parse(_fixture.Json).From("users").LastOrDefault();
 
         Assert.NotNull(last);
         Assert.Equal("Cara", JsonTestHelper.GetString(last, "name"));
@@ -30,7 +30,7 @@ public sealed class JsonQueryTests
     [Fact]
     public void Nth_ValidIndex_ReturnsCorrectNode()
     {
-        var node = JsonQuery.Parse(_fixture.Json).From("users").Nth(1);
+        JsonNode? node = JsonQuery.Parse(_fixture.Json).From("users").Nth(1);
 
         Assert.NotNull(node);
         Assert.Equal("Ben", JsonTestHelper.GetString(node, "name"));
@@ -39,28 +39,28 @@ public sealed class JsonQueryTests
     [Fact]
     public void Nth_NegativeIndex_ReturnsNull()
     {
-        var node = JsonQuery.Parse(_fixture.Json).From("users").Nth(-1);
+        JsonNode? node = JsonQuery.Parse(_fixture.Json).From("users").Nth(-1);
         Assert.Null(node);
     }
 
     [Fact]
     public void Nth_OutOfBoundsIndex_ReturnsNull()
     {
-        var node = JsonQuery.Parse(_fixture.Json).From("users").Nth(999);
+        JsonNode? node = JsonQuery.Parse(_fixture.Json).From("users").Nth(999);
         Assert.Null(node);
     }
 
     [Fact]
     public void Find_ReturnsNodeAtPath()
     {
-        var node = JsonQuery.Parse(_fixture.Json).Find("users.0.name");
+        JsonNode? node = JsonQuery.Parse(_fixture.Json).Find("users.0.name");
         Assert.Equal("Ava", node?.GetValue<string>());
     }
 
     [Fact]
     public void At_IsAliasForFind()
     {
-        var q = JsonQuery.Parse(_fixture.Json);
+        JsonQuery q = JsonQuery.Parse(_fixture.Json);
         Assert.Equal(q.Find("users.0.name")?.ToJsonString(), q.At("users.0.name")?.ToJsonString());
     }
 
@@ -69,7 +69,7 @@ public sealed class JsonQueryTests
     [Fact]
     public void OrWhere_CombinesFilteredResults()
     {
-        var count = JsonQuery.Parse(_fixture.Json)
+        int count = JsonQuery.Parse(_fixture.Json)
             .From("users")
             .Where("name", "==", "Ava")
             .OrWhere("name", "==", "Ben")
@@ -83,7 +83,7 @@ public sealed class JsonQueryTests
     [Fact]
     public void OrderByDescending_ReturnsHighestAgeFirst()
     {
-        var first = JsonQuery.Parse(_fixture.Json).From("users").OrderByDescending("age").FirstOrDefault();
+        JsonNode? first = JsonQuery.Parse(_fixture.Json).From("users").OrderByDescending("age").FirstOrDefault();
         Assert.Equal("Ava", JsonTestHelper.GetString(first, "name"));
     }
 
@@ -92,14 +92,14 @@ public sealed class JsonQueryTests
     [Fact]
     public void Min_ReturnsLowestSalary()
     {
-        var min = JsonQuery.Parse(_fixture.Json).From("users").Min("salary");
+        decimal min = JsonQuery.Parse(_fixture.Json).From("users").Min("salary");
         Assert.Equal(800M, min);
     }
 
     [Fact]
     public void Max_ReturnsHighestSalary()
     {
-        var max = JsonQuery.Parse(_fixture.Json).From("users").Max("salary");
+        decimal max = JsonQuery.Parse(_fixture.Json).From("users").Max("salary");
         Assert.Equal(1000M, max);
     }
 
@@ -109,14 +109,14 @@ public sealed class JsonQueryTests
     public void Chunk_ProducesCorrectNumberOfChunks()
     {
         // 3 users chunked by 2 → 2 chunks
-        var chunks = JsonQuery.Parse(_fixture.Json).From("users").Chunk(2).Get();
+        IReadOnlyList<JsonNode?> chunks = JsonQuery.Parse(_fixture.Json).From("users").Chunk(2).Get();
         Assert.Equal(2, chunks.Count);
     }
 
     [Fact]
     public void Chunk_FirstChunkHasCorrectSize()
     {
-        var first = JsonQuery.Parse(_fixture.Json).From("users").Chunk(2).FirstOrDefault() as JsonArray;
+        JsonArray? first = JsonQuery.Parse(_fixture.Json).From("users").Chunk(2).FirstOrDefault() as JsonArray;
         Assert.NotNull(first);
         Assert.Equal(2, first!.Count);
     }
@@ -135,15 +135,15 @@ public sealed class JsonQueryTests
         const string json = """
             {"items": ["a", "b", "a", "c"]}
             """;
-        var count = JsonQuery.Parse(json).From("items").Distinct().Count();
+        int count = JsonQuery.Parse(json).From("items").Distinct().Count();
         Assert.Equal(3, count);
     }
 
     [Fact]
     public void Copy_ReturnsEqualButIndependentQuery()
     {
-        var original = JsonQuery.Parse(_fixture.Json).From("users");
-        var copy = original.Copy();
+        JsonQuery original = JsonQuery.Parse(_fixture.Json).From("users");
+        JsonQuery copy = original.Copy();
 
         // Same count
         Assert.Equal(original.Count(), copy.Count());
@@ -162,7 +162,7 @@ public sealed class JsonQueryTests
     [Fact]
     public void Exists_ReturnsFalseWhenNoMatches()
     {
-        var exists = JsonQuery.Parse(_fixture.Json)
+        bool exists = JsonQuery.Parse(_fixture.Json)
             .From("users")
             .Where("name", "==", "DoesNotExist")
             .Exists();
@@ -174,7 +174,7 @@ public sealed class JsonQueryTests
     [Fact]
     public void Take_ReturnsAtMostNResults()
     {
-        var result = JsonQuery.Parse(_fixture.Json).From("users").Take(2).Get();
+        IReadOnlyList<JsonNode?> result = JsonQuery.Parse(_fixture.Json).From("users").Take(2).Get();
         Assert.Equal(2, result.Count);
         Assert.Equal("Ava", JsonTestHelper.GetString(result[0], "name"));
     }
@@ -182,7 +182,7 @@ public sealed class JsonQueryTests
     [Fact]
     public void Skip_SkipsFirstNResults()
     {
-        var result = JsonQuery.Parse(_fixture.Json).From("users").Skip(1).Get();
+        IReadOnlyList<JsonNode?> result = JsonQuery.Parse(_fixture.Json).From("users").Skip(1).Get();
         Assert.Equal(2, result.Count);
         Assert.Equal("Ben", JsonTestHelper.GetString(result[0], "name"));
     }
@@ -190,7 +190,7 @@ public sealed class JsonQueryTests
     [Fact]
     public void Skip_Then_Take_ReturnsMiddleItem()
     {
-        var result = JsonQuery.Parse(_fixture.Json).From("users").Skip(1).Take(1).Get();
+        IReadOnlyList<JsonNode?> result = JsonQuery.Parse(_fixture.Json).From("users").Skip(1).Take(1).Get();
         Assert.Single(result);
         Assert.Equal("Ben", JsonTestHelper.GetString(result[0], "name"));
     }
@@ -214,7 +214,7 @@ public sealed class JsonQueryTests
     [Fact]
     public void SingleOrDefault_EmptySequence_ReturnsNull()
     {
-        var result = JsonQuery.Parse(_fixture.Json)
+        JsonNode? result = JsonQuery.Parse(_fixture.Json)
             .From("users")
             .Where("name", "==", "DoesNotExist")
             .SingleOrDefault();
@@ -225,7 +225,7 @@ public sealed class JsonQueryTests
     [Fact]
     public void SingleOrDefault_ExactlyOneElement_ReturnsElement()
     {
-        var result = JsonQuery.Parse(_fixture.Json)
+        JsonNode? result = JsonQuery.Parse(_fixture.Json)
             .From("users")
             .Where("name", "==", "Ava")
             .SingleOrDefault();
@@ -246,13 +246,13 @@ public sealed class JsonQueryTests
     [Fact]
     public void Select_ReturnsOnlyRequestedFields()
     {
-        var results = JsonQuery.Parse(_fixture.Json)
+        IReadOnlyList<JsonNode?> results = JsonQuery.Parse(_fixture.Json)
             .From("users")
             .Select("name", "age")
             .Get();
 
         Assert.Equal(3, results.Count);
-        var first = results[0] as JsonObject;
+        JsonObject? first = results[0] as JsonObject;
         Assert.NotNull(first);
         Assert.NotNull(first!["name"]);
         Assert.NotNull(first["age"]);
@@ -263,12 +263,12 @@ public sealed class JsonQueryTests
     [Fact]
     public void Select_MissingFieldOmittedSilently()
     {
-        var results = JsonQuery.Parse(_fixture.Json)
+        IReadOnlyList<JsonNode?> results = JsonQuery.Parse(_fixture.Json)
             .From("users")
             .Select("name", "nonexistent")
             .Get();
 
-        var first = results[0] as JsonObject;
+        JsonObject? first = results[0] as JsonObject;
         Assert.NotNull(first);
         Assert.NotNull(first!["name"]);
         Assert.Null(first["nonexistent"]);
@@ -279,14 +279,14 @@ public sealed class JsonQueryTests
     [Fact]
     public void EmptyArray_Count_ReturnsZeroNotThrow()
     {
-        var count = JsonQuery.Parse("{\"users\":[]}").From("users").Count();
+        int count = JsonQuery.Parse("{\"users\":[]}").From("users").Count();
         Assert.Equal(0, count);
     }
 
     [Fact]
     public void Where_MissingField_SilentlyNonMatches()
     {
-        var count = JsonQuery.Parse(_fixture.Json)
+        int count = JsonQuery.Parse(_fixture.Json)
             .From("users")
             .Where("nonexistent", "==", "x")
             .Count();
