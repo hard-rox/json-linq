@@ -11,5 +11,6 @@ TestResults/
 *.snupkg
 artifacts/
 BenchmarkDotNet.Artifacts/
+coverage-report/
 
 
