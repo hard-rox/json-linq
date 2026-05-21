@@ -1,0 +1,7 @@
+{
+  "users": [
+    { "id": 1, "name": "Ava", "age": 30, "department": "Engineering", "salary": 1000 },
+    { "id": 2, "name": "Ben", "age": 25, "department": "Engineering", "salary": 800 },
+    { "id": 3, "name": "Cara", "age": 29, "department": "Sales", "salary": 900 }
+  ]
+}

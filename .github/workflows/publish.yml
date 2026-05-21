@@ -1,0 +1,43 @@
+name: Build Test Pack Publish
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore
+        run: dotnet restore JsonLinq.slnx
+
+      - name: Build
+        run: dotnet build JsonLinq.slnx --configuration Release --no-restore
+
+      - name: Test
+        run: dotnet test tests/JsonLinq.Tests/JsonLinq.Tests.csproj --configuration Release --no-build
+
+      - name: Pack
+        run: dotnet pack src/JsonLinq/JsonLinq.csproj --configuration Release --no-build --output ./artifacts
+
+      - name: Publish NuGet.org
+        if: ${{ secrets.NUGET_API_KEY != '' }}
+        run: dotnet nuget push "./artifacts/*.nupkg" --api-key "${{ secrets.NUGET_API_KEY }}" --source "https://api.nuget.org/v3/index.json" --skip-duplicate
+
+      - name: Publish GitHub Packages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: dotnet nuget push "./artifacts/*.nupkg" --api-key "$GITHUB_TOKEN" --source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" --skip-duplicate

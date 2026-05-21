@@ -1,0 +1,52 @@
+using BenchmarkDotNet.Attributes;
+using JsonLinq.Core;
+
+namespace JsonLinq.Benchmarks.Benchmarks;
+
+[Config(typeof(JsonLinqBenchmarkConfig))]
+public class FullQueryBenchmarks
+{
+    [GlobalSetup]
+    public void Setup() { /* data inlined as constants */ }
+
+    [Benchmark]
+    public int ComplexQueryChainSmall() =>
+        JsonQuery.Parse(BenchmarkData.SmallJson)
+            .From("users")
+            .Where("department", "==", "Engineering")
+            .SortBy("salary", "desc")
+            .Count();
+
+    [Benchmark]
+    public int FilterAndAggregateSmall() =>
+        JsonQuery.Parse(BenchmarkData.SmallJson)
+            .From("users")
+            .Where("active", "==", true)
+            .Count();
+
+    [Benchmark]
+    public int FilterAndGroupSmall() =>
+        JsonQuery.Parse(BenchmarkData.SmallJson)
+            .From("users")
+            .Where("age", ">", 26)
+            .GroupBy("department")
+            .Count();
+
+    [Benchmark]
+    public int ComplexQueryChainMedium() =>
+        JsonQuery.Parse(BenchmarkData.MediumJson)
+            .From("users")
+            .Where("department", "==", "Engineering")
+            .Where("salary", ">", 900)
+            .SortBy("age")
+            .Count();
+
+    [Benchmark]
+    public int MultiOrWhereSmall() =>
+        JsonQuery.Parse(BenchmarkData.SmallJson)
+            .From("users")
+            .Where("department", "==", "Engineering")
+            .OrWhere("department", "==", "Sales")
+            .OrWhere("department", "==", "Marketing")
+            .Count();
+}

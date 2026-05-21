@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/benchmarks/" />
+  <Folder Name="/benchmarks/JsonLinq.Benchmarks/" />
+  <Folder Name="/examples/">
+    <Project Path="examples/JsonLinq.Examples/JsonLinq.Examples.csproj" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/JsonLinq/JsonLinq.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/JsonLinq.Tests/JsonLinq.Tests.csproj" />
+  </Folder>
+</Solution>

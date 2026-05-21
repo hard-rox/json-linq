@@ -1,0 +1,15 @@
+bin/
+obj/
+.vs/
+.idea/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+TestResults/
+*.nupkg
+*.snupkg
+artifacts/
+BenchmarkDotNet.Artifacts/
+
+

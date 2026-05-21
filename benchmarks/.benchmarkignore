@@ -1,0 +1,2 @@
+# Ignore BenchmarkDotNet generated files
+BenchmarkDotNet.Artifacts/
