@@ -12,7 +12,8 @@ public sealed class JsonQuery
     private readonly IReadOnlyList<JsonNode?> _result;
     private readonly QueryEngine _engine;
 
-    private JsonQuery(JsonNode root, IReadOnlyList<JsonNode?> scope, IReadOnlyList<JsonNode?> result, QueryEngine engine)
+    private JsonQuery(JsonNode root, IReadOnlyList<JsonNode?> scope, IReadOnlyList<JsonNode?> result,
+        QueryEngine engine)
     {
         _root = root;
         _scope = scope;
@@ -50,11 +51,24 @@ public sealed class JsonQuery
         return new JsonQuery(root, seed, seed, new QueryEngine());
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Creates a subset of the query by resolving the specified path from the root node.
+    /// </summary>
+    /// <param name="path">The path to resolve within the JSON structure.</param>
+    /// <returns>A new <see cref="JsonQuery"/> instance scoped to the resolved subset.</returns>
     public JsonQuery From(string path)
     {
         JsonNode? node = PathResolver.Resolve(_root, path);
-        ReadOnlyCollection<JsonNode?> collection = ToCollection(node);
+        ReadOnlyCollection<JsonNode?> collection;
+        if (node is JsonArray arr)
+        {
+            collection = arr.Select(x => x).ToList().AsReadOnly();
+        }
+        else
+        {
+            collection = new List<JsonNode?> { node }.AsReadOnly();
+        }
+
         return new JsonQuery(_root, collection, collection, _engine);
     }
 
@@ -73,7 +87,8 @@ public sealed class JsonQuery
     /// </summary>
     public JsonQuery Where(string field, string op, object? value)
     {
-        IReadOnlyList<JsonNode?> filtered = _result.Where(n => JsonConditionEvaluator.Evaluate(n, field, op, value)).ToList().AsReadOnly();
+        IReadOnlyList<JsonNode?> filtered = _result.Where(n => JsonConditionEvaluator.Evaluate(n, field, op, value))
+            .ToList().AsReadOnly();
         return new JsonQuery(_root, _scope, filtered, _engine);
     }
 
@@ -82,7 +97,8 @@ public sealed class JsonQuery
     /// </summary>
     public JsonQuery OrWhere(string field, string op, object? value)
     {
-        IReadOnlyList<JsonNode?> filteredFromScope = _scope.Where(n => JsonConditionEvaluator.Evaluate(n, field, op, value)).ToList().AsReadOnly();
+        IReadOnlyList<JsonNode?> filteredFromScope =
+            _scope.Where(n => JsonConditionEvaluator.Evaluate(n, field, op, value)).ToList().AsReadOnly();
         ReadOnlyCollection<JsonNode?> union = _result
             .Concat(filteredFromScope)
             .DistinctBy(x => x?.ToJsonString() ?? string.Empty)
@@ -287,16 +303,11 @@ public sealed class JsonQuery
         return new JsonQuery(_root, _scope, remaining, _engine);
     }
 
-    /// <inheritdoc />
-    public IReadOnlyList<JsonNode?> Get() => _result;
-
-    private static ReadOnlyCollection<JsonNode?> ToCollection(JsonNode? node)
-    {
-        if (node is JsonArray arr)
-        {
-            return arr.Select(x => x).ToList().AsReadOnly();
-        }
-
-        return new List<JsonNode?> { node }.AsReadOnly();
-    }
+    /// <summary>
+    /// Converts the query result into a read-only list of JSON nodes.
+    /// </summary>
+    /// <returns>
+    /// A read-only list containing the JSON nodes that match the query result.
+    /// </returns>
+    public IReadOnlyList<JsonNode?> ToList() => _result;
 }

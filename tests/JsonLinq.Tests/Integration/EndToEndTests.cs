@@ -19,7 +19,7 @@ public sealed class EndToEndTests : IClassFixture<SampleDataFixture>
             .From("employees")
             .Where("department", "==", "Engineering")
             .OrderByDescending("salary")
-            .Get();
+            .ToList();
 
         Assert.Equal(2, rows.Count);
         Assert.Equal("Alice", rows[0]?["name"]?.GetValue<string>());

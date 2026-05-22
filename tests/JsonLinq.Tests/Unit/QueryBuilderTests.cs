@@ -33,7 +33,7 @@ public sealed class QueryBuilderTests
         IReadOnlyList<JsonNode?> grouped = JsonQuery.Parse(_fixture.Json)
             .From("employees")
             .GroupBy("department")
-            .Get();
+            .ToList();
 
         Assert.Equal(2, grouped.Count);
     }

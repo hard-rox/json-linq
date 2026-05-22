@@ -10,7 +10,7 @@ public static class BasicFiltering
         IReadOnlyList<JsonNode?> result = JsonQuery.Parse(json)
             .From("employees")
             .Where("department", "==", "Engineering")
-            .Get();
+            .ToList();
 
         Console.WriteLine($"BasicFiltering: {result.Count} engineering employees");
     }

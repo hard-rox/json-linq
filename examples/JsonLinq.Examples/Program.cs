@@ -3,10 +3,10 @@
 string dataPath = Path.Combine(AppContext.BaseDirectory, "data.json");
 if (!File.Exists(dataPath))
 {
-	dataPath = Path.Combine(Directory.GetCurrentDirectory(), "data.json");
+    dataPath = Path.Combine(Directory.GetCurrentDirectory(), "data.json");
 }
 
-string json = File.ReadAllText(dataPath);
+string json = await File.ReadAllTextAsync(dataPath);
 
 BasicFiltering.Run(json);
 Aggregations.Run(json);
