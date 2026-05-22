@@ -6,18 +6,8 @@ namespace JsonLinq.Core;
 /// <summary>
 /// Provides execution operations over JSON node collections.
 /// </summary>
-public sealed class QueryEngine(IMatcher matcher)
+public sealed class QueryEngine
 {
-    private readonly IMatcher _matcher = matcher ?? throw new ArgumentNullException(nameof(matcher));
-
-    /// <summary>
-    /// Filters nodes by condition.
-    /// </summary>
-    public IReadOnlyList<JsonNode?> Filter(IEnumerable<JsonNode?> source, JsonCondition condition)
-    {
-        return source.Where(x => _matcher.IsMatch(x, condition)).ToList().AsReadOnly();
-    }
-
     /// <summary>
     /// Sorts nodes by path and order.
     /// </summary>

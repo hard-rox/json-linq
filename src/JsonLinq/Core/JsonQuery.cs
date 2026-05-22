@@ -1,4 +1,3 @@
-using JsonLinq.Abstractions;
 using JsonLinq.Utilities;
 
 namespace JsonLinq.Core;
@@ -6,7 +5,7 @@ namespace JsonLinq.Core;
 /// <summary>
 /// Fluent query object for JSON data.
 /// </summary>
-public sealed class JsonQuery : IJsonQueryable
+public sealed class JsonQuery
 {
     private readonly JsonNode _root;
     private readonly IReadOnlyList<JsonNode?> _scope;
@@ -28,7 +27,7 @@ public sealed class JsonQuery : IJsonQueryable
     {
         JsonNode root = JsonParser.Parse(json);
         ReadOnlyCollection<JsonNode?> seed = new List<JsonNode?> { root }.AsReadOnly();
-        return new JsonQuery(root, seed, seed, new QueryEngine(new Matcher()));
+        return new JsonQuery(root, seed, seed, new QueryEngine());
     }
 
     /// <summary>
@@ -38,7 +37,7 @@ public sealed class JsonQuery : IJsonQueryable
     {
         JsonNode root = JsonParser.ParseFile(filePath);
         ReadOnlyCollection<JsonNode?> seed = new List<JsonNode?> { root }.AsReadOnly();
-        return new JsonQuery(root, seed, seed, new QueryEngine(new Matcher()));
+        return new JsonQuery(root, seed, seed, new QueryEngine());
     }
 
     /// <summary>
@@ -48,7 +47,7 @@ public sealed class JsonQuery : IJsonQueryable
     {
         JsonNode root = await JsonParser.ParseFileAsync(filePath, cancellationToken).ConfigureAwait(false);
         ReadOnlyCollection<JsonNode?> seed = new List<JsonNode?> { root }.AsReadOnly();
-        return new JsonQuery(root, seed, seed, new QueryEngine(new Matcher()));
+        return new JsonQuery(root, seed, seed, new QueryEngine());
     }
 
     /// <inheritdoc />
@@ -69,17 +68,21 @@ public sealed class JsonQuery : IJsonQueryable
     /// </summary>
     public JsonNode? At(string path) => Find(path);
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Filters the current results using a predicate.
+    /// </summary>
     public JsonQuery Where(string field, string op, object? value)
     {
-        IReadOnlyList<JsonNode?> filtered = _engine.Filter(_result, new JsonCondition(field, op, value));
+        IReadOnlyList<JsonNode?> filtered = _result.Where(n => JsonConditionEvaluator.Evaluate(n, field, op, value)).ToList().AsReadOnly();
         return new JsonQuery(_root, _scope, filtered, _engine);
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Unions the current results with nodes from scope matching a predicate.
+    /// </summary>
     public JsonQuery OrWhere(string field, string op, object? value)
     {
-        IReadOnlyList<JsonNode?> filteredFromScope = _engine.Filter(_scope, new JsonCondition(field, op, value));
+        IReadOnlyList<JsonNode?> filteredFromScope = _scope.Where(n => JsonConditionEvaluator.Evaluate(n, field, op, value)).ToList().AsReadOnly();
         ReadOnlyCollection<JsonNode?> union = _result
             .Concat(filteredFromScope)
             .DistinctBy(x => x?.ToJsonString() ?? string.Empty)

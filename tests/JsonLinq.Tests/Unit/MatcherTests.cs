@@ -4,7 +4,8 @@ namespace JsonLinq.Tests.Unit;
 
 public sealed class MatcherTests
 {
-    private readonly Matcher _matcher = new();
+    private static readonly string _nameData = "{\"items\":[{\"name\":\"Ava\"}]}";
+    private static readonly string _ageData  = "{\"items\":[{\"age\":30}]}";
 
     [Theory]
     [InlineData("==", "Ava", true)]
@@ -12,10 +13,11 @@ public sealed class MatcherTests
     [InlineData("==", "Ben", false)]
     [InlineData("!=", "Ava", false)]
     [InlineData("!=", "Ben", true)]
-    public void IsMatch_EqualityOperators_WorkAsExpected(string op, string value, bool expected)
+    public void Where_EqualityOperators_WorkAsExpected(string op, string value, bool expected)
     {
-        JsonNode? node = JsonNode.Parse("{\"name\":\"Ava\"}");
-        Assert.Equal(expected, _matcher.IsMatch(node, new JsonCondition("name", op, value)));
+        JsonQuery query = JsonQuery.Parse(_nameData).From("items");
+        int count = query.Where("name", op, value).Get().Count;
+        Assert.Equal(expected ? 1 : 0, count);
     }
 
     [Theory]
@@ -27,52 +29,53 @@ public sealed class MatcherTests
     [InlineData("<",  30, false)]
     [InlineData("<=", 30, true)]
     [InlineData("<=", 29, false)]
-    public void IsMatch_RelationalOperators_WorkAsExpected(string op, int value, bool expected)
+    public void Where_RelationalOperators_WorkAsExpected(string op, int value, bool expected)
     {
-        JsonNode? node = JsonNode.Parse("{\"age\":30}");
-        Assert.Equal(expected, _matcher.IsMatch(node, new JsonCondition("age", op, value)));
+        JsonQuery query = JsonQuery.Parse(_ageData).From("items");
+        int count = query.Where("age", op, value).Get().Count;
+        Assert.Equal(expected ? 1 : 0, count);
     }
 
     [Fact]
-    public void IsMatch_RelationalOperator_DecimalVsLong_NoTruncation()
+    public void Where_RelationalOperator_DecimalVsLong_NoTruncation()
     {
-        // salary is stored as long 1000; comparing > 999.9 should be true (not truncated to 999)
-        JsonNode? node = JsonNode.Parse("{\"salary\":1000}");
-        Assert.True(_matcher.IsMatch(node, new JsonCondition("salary", ">", 999.9)));
-        Assert.False(_matcher.IsMatch(node, new JsonCondition("salary", ">", 1000.1)));
+        JsonQuery query = JsonQuery.Parse("{\"items\":[{\"salary\":1000}]}").From("items");
+        Assert.Single(query.Where("salary", ">", 999.9).Get());
+        Assert.Empty(query.Where("salary", ">", 1000.1).Get());
     }
 
     [Theory]
     [InlineData("va",  true)]
     [InlineData("Ava", true)]
-    [InlineData("AVA", true)]   // case-insensitive
+    [InlineData("AVA", true)]
     [InlineData("xyz", false)]
-    public void IsMatch_ContainsOperator_WorksAsExpected(string substring, bool expected)
+    public void Where_ContainsOperator_WorksAsExpected(string substring, bool expected)
     {
-        JsonNode? node = JsonNode.Parse("{\"name\":\"Ava\"}");
-        Assert.Equal(expected, _matcher.IsMatch(node, new JsonCondition("name", "contains", substring)));
+        JsonQuery query = JsonQuery.Parse(_nameData).From("items");
+        int count = query.Where("name", "contains", substring).Get().Count;
+        Assert.Equal(expected ? 1 : 0, count);
     }
 
     [Fact]
-    public void IsMatch_InOperator_WithJsonArray_MatchesPresent()
+    public void Where_InOperator_WithJsonArray_MatchesPresent()
     {
-        JsonNode? node = JsonNode.Parse("{\"dept\":\"Engineering\"}");
+        JsonQuery query = JsonQuery.Parse("{\"items\":[{\"dept\":\"Engineering\"}]}").From("items");
         JsonNode? allowedSet = JsonNode.Parse("[\"Engineering\",\"Sales\"]");
-        Assert.True(_matcher.IsMatch(node, new JsonCondition("dept", "in", allowedSet)));
+        Assert.Single(query.Where("dept", "in", allowedSet).Get());
     }
 
     [Fact]
-    public void IsMatch_InOperator_WithJsonArray_ReturnsFalseWhenAbsent()
+    public void Where_InOperator_WithJsonArray_ReturnsFalseWhenAbsent()
     {
-        JsonNode? node = JsonNode.Parse("{\"dept\":\"Marketing\"}");
+        JsonQuery query = JsonQuery.Parse("{\"items\":[{\"dept\":\"Marketing\"}]}").From("items");
         JsonNode? allowedSet = JsonNode.Parse("[\"Engineering\",\"Sales\"]");
-        Assert.False(_matcher.IsMatch(node, new JsonCondition("dept", "in", allowedSet)));
+        Assert.Empty(query.Where("dept", "in", allowedSet).Get());
     }
 
     [Fact]
-    public void IsMatch_MissingField_ReturnsFalse()
+    public void Where_MissingField_ReturnsFalse()
     {
-        JsonNode? node = JsonNode.Parse("{\"name\":\"Ava\"}");
-        Assert.False(_matcher.IsMatch(node, new JsonCondition("nonexistent", "==", "x")));
+        JsonQuery query = JsonQuery.Parse(_nameData).From("items");
+        Assert.Empty(query.Where("nonexistent", "==", "x").Get());
     }
 }

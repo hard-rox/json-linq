@@ -3,19 +3,18 @@ using JsonLinq.Utilities;
 namespace JsonLinq.Core;
 
 /// <summary>
-/// Default condition matcher implementation.
+/// Evaluates string-based conditions against JSON nodes.
 /// </summary>
-public sealed class Matcher : IMatcher
+internal static class JsonConditionEvaluator
 {
-    /// <inheritdoc />
-    public bool IsMatch(JsonNode? item, JsonCondition condition)
+    internal static bool Evaluate(JsonNode? item, string field, string op, object? value)
     {
-        JsonNode? node = PathResolver.Resolve(item, condition.Field);
+        JsonNode? node = PathResolver.Resolve(item, field);
         object? left = JsonValueHelper.ToComparable(node);
-        object? right = JsonValueHelper.ToComparable(condition.Value);
-        string op = condition.Operator.Trim().ToLowerInvariant();
+        object? right = JsonValueHelper.ToComparable(value);
+        string normalizedOp = op.Trim().ToLowerInvariant();
 
-        return op switch
+        return normalizedOp switch
         {
             "=" or "==" => Equals(left, right),
             "!=" or "<>" => !Equals(left, right),
@@ -24,8 +23,7 @@ public sealed class Matcher : IMatcher
             "<" => Compare(left, right) < 0,
             "<=" => Compare(left, right) <= 0,
             "contains" => left?.ToString()?.Contains(right?.ToString() ?? string.Empty, StringComparison.OrdinalIgnoreCase) == true,
-            // Use condition.Value directly: ToComparable converts JsonArray to a string, breaking membership tests
-            "in" => IsIn(condition.Value, left),
+            "in" => IsIn(value, left),
             _ => false
         };
     }
@@ -36,8 +34,6 @@ public sealed class Matcher : IMatcher
         if (left is null) return -1;
         if (right is null) return 1;
 
-        // Normalize both sides to decimal when either is numeric to prevent
-        // Convert.ChangeType truncation (e.g. double 999.9 -> long 999)
         if (IsNumeric(left) && IsNumeric(right))
         {
             decimal l = Convert.ToDecimal(left);
