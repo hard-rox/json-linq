@@ -12,22 +12,22 @@ public class FullQueryBenchmarks
     [Benchmark]
     public int ComplexQueryChainSmall() =>
         JsonQuery.Parse(BenchmarkData.SmallJson)
-            .From("users")
+            .From("employees")
             .Where("department", "==", "Engineering")
-            .SortBy("salary", "desc")
+            .OrderByDescending("salary")
             .Count();
 
     [Benchmark]
     public int FilterAndAggregateSmall() =>
         JsonQuery.Parse(BenchmarkData.SmallJson)
-            .From("users")
+            .From("employees")
             .Where("active", "==", true)
             .Count();
 
     [Benchmark]
     public int FilterAndGroupSmall() =>
         JsonQuery.Parse(BenchmarkData.SmallJson)
-            .From("users")
+            .From("employees")
             .Where("age", ">", 26)
             .GroupBy("department")
             .Count();
@@ -35,16 +35,16 @@ public class FullQueryBenchmarks
     [Benchmark]
     public int ComplexQueryChainMedium() =>
         JsonQuery.Parse(BenchmarkData.MediumJson)
-            .From("users")
+            .From("employees")
             .Where("department", "==", "Engineering")
             .Where("salary", ">", 900)
-            .SortBy("age")
+            .OrderBy("age")
             .Count();
 
     [Benchmark]
     public int MultiOrWhereSmall() =>
         JsonQuery.Parse(BenchmarkData.SmallJson)
-            .From("users")
+            .From("employees")
             .Where("department", "==", "Engineering")
             .OrWhere("department", "==", "Sales")
             .OrWhere("department", "==", "Marketing")

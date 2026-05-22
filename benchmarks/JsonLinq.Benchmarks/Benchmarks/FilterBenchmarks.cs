@@ -12,8 +12,8 @@ public class FilterBenchmarks
     [GlobalSetup]
     public void Setup()
     {
-        _querySmall = JsonQuery.Parse(BenchmarkData.SmallJson).From("users");
-        _queryMedium = JsonQuery.Parse(BenchmarkData.MediumJson).From("users");
+        _querySmall = JsonQuery.Parse(BenchmarkData.SmallJson).From("employees");
+        _queryMedium = JsonQuery.Parse(BenchmarkData.MediumJson).From("employees");
     }
 
     [Benchmark]

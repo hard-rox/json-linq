@@ -12,15 +12,15 @@ public class TransformationBenchmarks
     [GlobalSetup]
     public void Setup()
     {
-        _querySmall = JsonQuery.Parse(BenchmarkData.SmallJson).From("users");
-        _queryMedium = JsonQuery.Parse(BenchmarkData.MediumJson).From("users");
+        _querySmall = JsonQuery.Parse(BenchmarkData.SmallJson).From("employees");
+        _queryMedium = JsonQuery.Parse(BenchmarkData.MediumJson).From("employees");
     }
 
     [Benchmark]
-    public int SortByAscSmall() => _querySmall.SortBy("age", "asc").Count();
+    public int OrderByAscSmall() => _querySmall.OrderBy("age").Count();
 
     [Benchmark]
-    public int SortByDescSmall() => _querySmall.SortBy("age", "desc").Count();
+    public int OrderByDescSmall() => _querySmall.OrderByDescending("age").Count();
 
     [Benchmark]
     public int GroupBySmall() => _querySmall.GroupBy("department").Count();

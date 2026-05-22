@@ -1,29 +1,164 @@
 {
-   "name": "products",
-   "description": "Features product list",
-   "vendor":{
-      "name": "Computer Source BD",
-      "email": "info@example.com",
-      "website":"www.example.com"
-   },
-   "users":[
-      {"id":1, "name":"Johura Akter Sumi", "location": "Barisal"},
-      {"id":2, "name":"Mehedi Hasan Nahid", "location": "Barisal"},
-      {"id":3, "name":"Ariful Islam", "location": "Barisal"},
-      {"id":4, "name":"Suhel Ahmed", "location": "Sylhet"},
-      {"id":5, "name":"Firoz Serniabat", "location": "Gournodi"},
-      {"id":6, "name":"Musa Jewel", "location": "Barisal", "visits": [
-         {"name": "Sylhet", "year": 2011},
-         {"name": "Cox's Bazar", "year": 2012},
-         {"name": "Bandarbar", "year": 2014}
-      ]}
-   ],
-   "products": [
-      {"id":1, "user_id": 2, "city": "bsl", "name":"iPhone", "cat":1, "price": 80000},
-      {"id":2, "user_id": 2, "city": null, "name":"macbook pro", "cat": 2, "price": 150000},
-      {"id":3, "user_id": 2, "city": "dhk", "name":"Redmi 3S Prime", "cat": 1, "price": 12000},
-      {"id":4, "user_id": 1, "city": null, "name":"Redmi 4X", "cat":1, "price": 15000},
-      {"id":5, "user_id": 1, "city": "bsl", "name":"macbook air", "cat": 2, "price": 110000},
-      {"id":6, "user_id": 2, "city": null, "name":"macbook air 1", "cat": 2, "price": 81000}
-   ]
+  "organization": {
+    "name": "Acme Corp",
+    "founded": 2005,
+    "headquarters": {
+      "city": "San Francisco",
+      "state": "CA",
+      "country": "USA",
+      "coordinates": { "lat": 37.7749, "lng": -122.4194 }
+    },
+    "contact": {
+      "email": "info@acme.com",
+      "phone": "+1-555-0100",
+      "social": {
+        "linkedin": "acme-corp",
+        "twitter": "@acmecorp"
+      }
+    }
+  },
+  "departments": [
+    { "id": 1, "name": "Engineering", "budget": 2000000, "headcount": 3 },
+    { "id": 2, "name": "Sales", "budget": 800000, "headcount": 2 },
+    { "id": 3, "name": "Design", "budget": 500000, "headcount": 1 }
+  ],
+  "employees": [
+    {
+      "id": 1,
+      "name": "Alice Chen",
+      "age": 34,
+      "department": "Engineering",
+      "salary": 120000,
+      "active": true,
+      "address": { "city": "San Francisco", "state": "CA", "zip": "94105" },
+      "skills": ["C#", "Python", "Kubernetes"],
+      "projects": [
+        { "id": 101, "name": "Project Phoenix", "role": "Lead" },
+        { "id": 102, "name": "Project Atlas", "role": "Contributor" }
+      ],
+      "metadata": { "joined": "2019-03-15", "remote": false }
+    },
+    {
+      "id": 2,
+      "name": "Bob Martinez",
+      "age": 28,
+      "department": "Engineering",
+      "salary": 95000,
+      "active": true,
+      "address": { "city": "Oakland", "state": "CA", "zip": "94601" },
+      "skills": ["TypeScript", "React", "Go"],
+      "projects": [
+        { "id": 102, "name": "Project Atlas", "role": "Lead" }
+      ],
+      "metadata": { "joined": "2021-07-01", "remote": true, "contractor": false }
+    },
+    {
+      "id": 3,
+      "name": "Carol White",
+      "age": 31,
+      "department": "Engineering",
+      "salary": 110000,
+      "active": false,
+      "address": { "city": "San Jose", "state": "CA", "zip": "95101" },
+      "skills": ["Rust", "C++", "Embedded"],
+      "projects": [
+        { "id": 101, "name": "Project Phoenix", "role": "Contributor" },
+        { "id": 103, "name": "Project Nexus", "role": "Lead" }
+      ],
+      "metadata": { "joined": "2018-11-20", "remote": false, "clearance": "L3" }
+    },
+    {
+      "id": 4,
+      "name": "David Kim",
+      "age": 26,
+      "department": "Sales",
+      "salary": 75000,
+      "active": true,
+      "address": { "city": "Los Angeles", "state": "CA", "zip": "90001" },
+      "skills": ["Negotiation", "CRM", "Salesforce"],
+      "projects": [
+        { "id": 104, "name": "Q4 Campaign", "role": "Owner" }
+      ],
+      "metadata": { "joined": "2022-01-10", "remote": true, "quota": 500000 }
+    },
+    {
+      "id": 5,
+      "name": "Eva Rossi",
+      "age": 24,
+      "department": "Sales",
+      "salary": 68000,
+      "active": true,
+      "address": { "city": "San Diego", "state": "CA", "zip": "92101" },
+      "skills": ["Cold Outreach", "LinkedIn Sales Navigator"],
+      "projects": [],
+      "metadata": { "joined": "2023-05-22", "remote": false }
+    },
+    {
+      "id": 6,
+      "name": "Frank Osei",
+      "age": 30,
+      "department": "Design",
+      "salary": 90000,
+      "active": true,
+      "address": { "city": "San Francisco", "state": "CA", "zip": "94102" },
+      "skills": ["Figma", "Sketch", "Motion Design"],
+      "projects": [
+        { "id": 101, "name": "Project Phoenix", "role": "Design Lead" },
+        { "id": 102, "name": "Project Atlas", "role": "Contributor" },
+        { "id": 103, "name": "Project Nexus", "role": "Contributor" }
+      ],
+      "metadata": { "joined": "2020-09-07", "remote": false, "portfolio": "https://frankosei.design" }
+    }
+  ],
+  "projects": [
+    {
+      "id": 101,
+      "name": "Project Phoenix",
+      "status": "active",
+      "priority": "high",
+      "budget": { "allocated": 500000, "spent": 320000, "currency": "USD" },
+      "timeline": { "start": "2024-01-15", "deadline": "2024-12-31" },
+      "tags": ["infrastructure", "backend", "critical"],
+      "milestones": [
+        { "name": "Alpha Release", "due": "2024-04-01", "completed": true },
+        { "name": "Beta Release", "due": "2024-08-01", "completed": false }
+      ]
+    },
+    {
+      "id": 102,
+      "name": "Project Atlas",
+      "status": "active",
+      "priority": "medium",
+      "budget": { "allocated": 200000, "spent": 90000, "currency": "USD" },
+      "timeline": { "start": "2024-03-01", "deadline": "2024-10-31" },
+      "tags": ["frontend", "dashboard"],
+      "milestones": [
+        { "name": "Design Review", "due": "2024-04-15", "completed": true },
+        { "name": "MVP Launch", "due": "2024-07-01", "completed": false }
+      ]
+    },
+    {
+      "id": 103,
+      "name": "Project Nexus",
+      "status": "planning",
+      "priority": "low",
+      "budget": { "allocated": 150000, "spent": 10000, "currency": "USD" },
+      "timeline": { "start": "2025-01-01", "deadline": "2025-06-30" },
+      "tags": ["research", "experimental"],
+      "milestones": []
+    },
+    {
+      "id": 104,
+      "name": "Q4 Campaign",
+      "status": "completed",
+      "priority": "high",
+      "budget": { "allocated": 80000, "spent": 76500, "currency": "USD" },
+      "timeline": { "start": "2023-10-01", "deadline": "2023-12-31" },
+      "tags": ["sales", "marketing"],
+      "milestones": [
+        { "name": "Campaign Launch", "due": "2023-10-15", "completed": true },
+        { "name": "Mid-quarter Review", "due": "2023-11-15", "completed": true }
+      ]
+    }
+  ]
 }

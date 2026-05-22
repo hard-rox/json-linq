@@ -8,10 +8,10 @@ public static class Sorting
     public static void Run(string json)
     {
         JsonNode? first = JsonQuery.Parse(json)
-            .From("products")
-            .OrderByDescending("price")
+            .From("employees")
+            .OrderByDescending("salary")
             .FirstOrDefault();
 
-        Console.WriteLine($"Sorting: top priced product = {first?["name"]?.GetValue<string>()}");
+        Console.WriteLine($"Sorting: top salary employee = {first?["name"]?.GetValue<string>()}");
     }
 }

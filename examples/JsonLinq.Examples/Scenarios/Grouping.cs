@@ -8,7 +8,7 @@ public static class Grouping
     public static void Run(string json)
     {
         IReadOnlyList<JsonNode?> groups = JsonQuery.Parse(json)
-            .From("users")
+            .From("employees")
             .GroupBy("department")
             .Get();
 

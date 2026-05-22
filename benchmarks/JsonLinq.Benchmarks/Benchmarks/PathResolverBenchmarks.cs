@@ -16,16 +16,16 @@ public class PathResolverBenchmarks
     }
 
     [Benchmark]
-    public JsonNode? SimplePathResolution() => PathResolver.Resolve(_root, "users");
+    public JsonNode? SimplePathResolution() => PathResolver.Resolve(_root, "employees");
 
     [Benchmark]
-    public JsonNode? NestedPathResolution() => PathResolver.Resolve(_root, "users.0.name");
+    public JsonNode? NestedPathResolution() => PathResolver.Resolve(_root, "employees.0.name");
 
     [Benchmark]
-    public JsonNode? NumericIndexResolution() => PathResolver.Resolve(_root, "users.5");
+    public JsonNode? NumericIndexResolution() => PathResolver.Resolve(_root, "employees.5");
 
     [Benchmark]
-    public JsonNode? DeepPathResolution() => PathResolver.Resolve(_root, "users.3.department");
+    public JsonNode? DeepPathResolution() => PathResolver.Resolve(_root, "employees.3.department");
 
     [Benchmark]
     public JsonNode? MissingPathResolution() => PathResolver.Resolve(_root, "nonexistent");

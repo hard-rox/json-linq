@@ -1,29 +1,67 @@
 {
-   "name": "products",
-   "description": "Features product list",
-   "vendor":{
-      "name": "Computer Source BD",
-      "email": "info@example.com",
-      "website":"www.example.com"
-   },
-   "users":[
-      {"id":1, "name":"Johura Akter Sumi", "location": "Barisal"},
-      {"id":2, "name":"Mehedi Hasan Nahid", "location": "Barisal"},
-      {"id":3, "name":"Ariful Islam", "location": "Barisal"},
-      {"id":4, "name":"Suhel Ahmed", "location": "Sylhet"},
-      {"id":5, "name":"Firoz Serniabat", "location": "Gournodi"},
-      {"id":6, "name":"Musa Jewel", "location": "Barisal", "visits": [
-         {"name": "Sylhet", "year": 2011},
-         {"name": "Cox's Bazar", "year": 2012},
-         {"name": "Bandarbar", "year": 2014}
-      ]}
-   ],
-   "products": [
-      {"id":1, "user_id": 2, "city": "bsl", "name":"iPhone", "cat":1, "price": 80000},
-      {"id":2, "user_id": 2, "city": null, "name":"macbook pro", "cat": 2, "price": 150000},
-      {"id":3, "user_id": 2, "city": "dhk", "name":"Redmi 3S Prime", "cat": 1, "price": 12000},
-      {"id":4, "user_id": 1, "city": null, "name":"Redmi 4X", "cat":1, "price": 15000},
-      {"id":5, "user_id": 1, "city": "bsl", "name":"macbook air", "cat": 2, "price": 110000},
-      {"id":6, "user_id": 2, "city": null, "name":"macbook air 1", "cat": 2, "price": 81000}
-   ]
+  "organization": {
+    "name": "Acme Corp",
+    "founded": 2005,
+    "headquarters": { "city": "San Francisco", "state": "CA", "country": "USA" },
+    "contact": { "email": "info@acme.com", "phone": "+1-555-0100" }
+  },
+  "departments": [
+    { "id": 1, "name": "Engineering", "budget": 5000000 },
+    { "id": 2, "name": "Sales", "budget": 2000000 },
+    { "id": 3, "name": "Marketing", "budget": 1500000 },
+    { "id": 4, "name": "Design", "budget": 1000000 },
+    { "id": 5, "name": "Operations", "budget": 800000 }
+  ],
+  "employees": [
+    { "id": 1,  "name": "Alice Adams",   "age": 30, "department": "Engineering", "salary": 1000, "active": true,  "address": { "city": "San Francisco", "state": "CA" }, "skills": ["C#", "Python"],             "metadata": { "joined": "2019-03-15", "remote": false } },
+    { "id": 2,  "name": "Bob Brown",     "age": 25, "department": "Engineering", "salary": 800,  "active": true,  "address": { "city": "Oakland",       "state": "CA" }, "skills": ["TypeScript", "React"],      "metadata": { "joined": "2021-07-01", "remote": true,  "contractor": false } },
+    { "id": 3,  "name": "Carol Chen",    "age": 29, "department": "Sales",       "salary": 900,  "active": false, "address": { "city": "Los Angeles",   "state": "CA" }, "skills": ["Salesforce", "CRM"],        "metadata": { "joined": "2020-04-10", "remote": false } },
+    { "id": 4,  "name": "David Davis",   "age": 35, "department": "Engineering", "salary": 1200, "active": true,  "address": { "city": "San Jose",      "state": "CA" }, "skills": ["Rust", "Go"],               "metadata": { "joined": "2018-11-20", "remote": false, "clearance": "L3" } },
+    { "id": 5,  "name": "Eva Evans",     "age": 28, "department": "Marketing",   "salary": 850,  "active": true,  "address": { "city": "Seattle",       "state": "WA" }, "skills": ["SEO", "Analytics"],         "metadata": { "joined": "2022-01-10", "remote": true  } },
+    { "id": 6,  "name": "Frank Foster",  "age": 32, "department": "Sales",       "salary": 950,  "active": true,  "address": { "city": "Denver",        "state": "CO" }, "skills": ["Negotiation"],              "metadata": { "joined": "2021-09-05", "remote": false, "quota": 600000 } },
+    { "id": 7,  "name": "Grace Green",   "age": 27, "department": "Engineering", "salary": 900,  "active": false, "address": { "city": "Austin",        "state": "TX" }, "skills": ["Java", "Kotlin"],           "metadata": { "joined": "2020-06-15", "remote": true  } },
+    { "id": 8,  "name": "Hank Harris",   "age": 31, "department": "Marketing",   "salary": 880,  "active": true,  "address": { "city": "Chicago",       "state": "IL" }, "skills": ["Content", "Branding"],      "metadata": { "joined": "2019-08-22", "remote": false } },
+    { "id": 9,  "name": "Iris Islam",    "age": 26, "department": "Sales",       "salary": 870,  "active": true,  "address": { "city": "Phoenix",       "state": "AZ" }, "skills": ["CRM"],                      "metadata": { "joined": "2023-02-01", "remote": false } },
+    { "id": 10, "name": "Jack Johnson",  "age": 33, "department": "Engineering", "salary": 1100, "active": true,  "address": { "city": "Boston",        "state": "MA" }, "skills": ["C++", "Embedded"],          "metadata": { "joined": "2017-05-30", "remote": false, "clearance": "L4" } },
+    { "id": 11, "name": "Karen King",    "age": 29, "department": "Engineering", "salary": 950,  "active": true,  "address": { "city": "Portland",      "state": "OR" }, "skills": ["Kubernetes", "DevOps"],     "metadata": { "joined": "2021-03-12", "remote": true  } },
+    { "id": 12, "name": "Leo Lopez",     "age": 31, "department": "Sales",       "salary": 920,  "active": true,  "address": { "city": "Miami",         "state": "FL" }, "skills": ["CRM", "HubSpot"],           "metadata": { "joined": "2020-10-07", "remote": false, "quota": 450000 } },
+    { "id": 13, "name": "Mia Miller",    "age": 28, "department": "Marketing",   "salary": 860,  "active": false, "address": { "city": "Atlanta",       "state": "GA" }, "skills": ["Content"],                  "metadata": { "joined": "2022-07-18", "remote": false } },
+    { "id": 14, "name": "Noah Nelson",   "age": 34, "department": "Engineering", "salary": 1150, "active": true,  "address": { "city": "Dallas",        "state": "TX" }, "skills": ["Python", "ML"],             "metadata": { "joined": "2018-04-25", "remote": false } },
+    { "id": 15, "name": "Olivia Ortiz",  "age": 26, "department": "Sales",       "salary": 880,  "active": true,  "address": { "city": "Las Vegas",     "state": "NV" }, "skills": ["Negotiation", "Salesforce"], "metadata": { "joined": "2023-05-22", "remote": false } },
+    { "id": 16, "name": "Paul Park",     "age": 30, "department": "Design",      "salary": 870,  "active": true,  "address": { "city": "Minneapolis",   "state": "MN" }, "skills": ["Figma", "Sketch"],          "metadata": { "joined": "2021-11-14", "remote": false, "portfolio": "https://paulpark.design" } },
+    { "id": 17, "name": "Quinn Quinn",   "age": 32, "department": "Engineering", "salary": 1080, "active": false, "address": { "city": "Salt Lake City","state": "UT" }, "skills": ["Go", "gRPC"],               "metadata": { "joined": "2019-06-03", "remote": true  } },
+    { "id": 18, "name": "Rachel Reed",   "age": 27, "department": "Sales",       "salary": 900,  "active": true,  "address": { "city": "Nashville",     "state": "TN" }, "skills": ["CRM"],                      "metadata": { "joined": "2022-09-19", "remote": false } },
+    { "id": 19, "name": "Sam Scott",     "age": 29, "department": "Marketing",   "salary": 845,  "active": true,  "address": { "city": "Columbus",      "state": "OH" }, "skills": ["SEO", "PPC"],               "metadata": { "joined": "2022-03-28", "remote": true  } },
+    { "id": 20, "name": "Tina Taylor",   "age": 35, "department": "Engineering", "salary": 1180, "active": true,  "address": { "city": "San Diego",     "state": "CA" }, "skills": ["C#", "Azure"],              "metadata": { "joined": "2017-12-01", "remote": false } },
+    { "id": 21, "name": "Uma Upton",     "age": 31, "department": "Operations",  "salary": 820,  "active": true,  "address": { "city": "Kansas City",   "state": "MO" }, "skills": ["JIRA", "Confluence"],       "metadata": { "joined": "2021-01-08", "remote": false } },
+    { "id": 22, "name": "Victor Vance",  "age": 28, "department": "Engineering", "salary": 970,  "active": true,  "address": { "city": "Raleigh",       "state": "NC" }, "skills": ["Scala", "Spark"],           "metadata": { "joined": "2020-08-17", "remote": true  } },
+    { "id": 23, "name": "Wendy White",   "age": 33, "department": "Design",      "salary": 910,  "active": true,  "address": { "city": "Charlotte",     "state": "NC" }, "skills": ["Figma", "Motion Design"],   "metadata": { "joined": "2019-10-29", "remote": false, "portfolio": "https://wendywhite.design" } },
+    { "id": 24, "name": "Xander Xu",     "age": 26, "department": "Marketing",   "salary": 835,  "active": false, "address": { "city": "Indianapolis",  "state": "IN" }, "skills": ["Analytics"],                "metadata": { "joined": "2023-04-05", "remote": true  } },
+    { "id": 25, "name": "Yasmin Young",  "age": 30, "department": "Sales",       "salary": 940,  "active": true,  "address": { "city": "Tampa",         "state": "FL" }, "skills": ["CRM", "Negotiation"],       "metadata": { "joined": "2020-12-14", "remote": false, "quota": 550000 } },
+    { "id": 26, "name": "Zach Zhang",    "age": 27, "department": "Engineering", "salary": 860,  "active": true,  "address": { "city": "Baltimore",     "state": "MD" }, "skills": ["Java", "Spring"],           "metadata": { "joined": "2022-05-11", "remote": false } },
+    { "id": 27, "name": "Amy Allen",     "age": 34, "department": "Operations",  "salary": 890,  "active": true,  "address": { "city": "Louisville",    "state": "KY" }, "skills": ["Process", "Lean"],          "metadata": { "joined": "2018-07-23", "remote": false } },
+    { "id": 28, "name": "Brian Baker",   "age": 29, "department": "Engineering", "salary": 1020, "active": true,  "address": { "city": "New Orleans",   "state": "LA" }, "skills": ["Python", "Django"],         "metadata": { "joined": "2021-02-16", "remote": true  } },
+    { "id": 29, "name": "Clara Clark",   "age": 32, "department": "Sales",       "salary": 960,  "active": false, "address": { "city": "Richmond",      "state": "VA" }, "skills": ["Salesforce"],               "metadata": { "joined": "2019-11-04", "remote": false } },
+    { "id": 30, "name": "Derek Diaz",    "age": 36, "department": "Engineering", "salary": 1250, "active": true,  "address": { "city": "Hartford",      "state": "CT" }, "skills": ["C#", ".NET", "Azure"],     "metadata": { "joined": "2016-09-12", "remote": false, "clearance": "L5" } },
+    { "id": 31, "name": "Ella Edwards",  "age": 27, "department": "Design",      "salary": 855,  "active": true,  "address": { "city": "Providence",    "state": "RI" }, "skills": ["Sketch", "Illustrator"],    "metadata": { "joined": "2022-08-30", "remote": false } },
+    { "id": 32, "name": "Fred Fisher",   "age": 31, "department": "Marketing",   "salary": 865,  "active": true,  "address": { "city": "Albany",        "state": "NY" }, "skills": ["SEO", "Email"],             "metadata": { "joined": "2020-11-09", "remote": true  } },
+    { "id": 33, "name": "Gina Garcia",   "age": 28, "department": "Operations",  "salary": 810,  "active": true,  "address": { "city": "Rochester",     "state": "NY" }, "skills": ["Confluence"],               "metadata": { "joined": "2023-01-17", "remote": false } },
+    { "id": 34, "name": "Henry Hall",    "age": 33, "department": "Engineering", "salary": 1070, "active": true,  "address": { "city": "Worcester",     "state": "MA" }, "skills": ["Rust", "WASM"],             "metadata": { "joined": "2019-02-07", "remote": false } },
+    { "id": 35, "name": "Isla Irving",   "age": 25, "department": "Sales",       "salary": 855,  "active": true,  "address": { "city": "Bridgeport",    "state": "CT" }, "skills": ["CRM"],                      "metadata": { "joined": "2023-07-03", "remote": false } },
+    { "id": 36, "name": "James James",   "age": 30, "department": "Design",      "salary": 895,  "active": false, "address": { "city": "Springfield",   "state": "IL" }, "skills": ["Figma"],                    "metadata": { "joined": "2020-07-21", "remote": true  } },
+    { "id": 37, "name": "Kate Kelly",    "age": 29, "department": "Marketing",   "salary": 875,  "active": true,  "address": { "city": "Rockford",      "state": "IL" }, "skills": ["Branding", "Analytics"],    "metadata": { "joined": "2021-04-14", "remote": false } },
+    { "id": 38, "name": "Liam Lewis",    "age": 36, "department": "Engineering", "salary": 1220, "active": true,  "address": { "city": "Syracuse",      "state": "NY" }, "skills": ["Go", "Kubernetes"],         "metadata": { "joined": "2016-03-28", "remote": false } },
+    { "id": 39, "name": "Maya Moore",    "age": 27, "department": "Sales",       "salary": 890,  "active": true,  "address": { "city": "Fort Wayne",    "state": "IN" }, "skills": ["Salesforce", "HubSpot"],    "metadata": { "joined": "2022-10-05", "remote": false, "quota": 480000 } },
+    { "id": 40, "name": "Nick Nguyen",   "age": 32, "department": "Operations",  "salary": 850,  "active": true,  "address": { "city": "Knoxville",     "state": "TN" }, "skills": ["JIRA", "Lean"],             "metadata": { "joined": "2020-05-19", "remote": false } },
+    { "id": 41, "name": "Ora Owens",     "age": 31, "department": "Engineering", "salary": 990,  "active": true,  "address": { "city": "Chattanooga",   "state": "TN" }, "skills": ["Python", "FastAPI"],        "metadata": { "joined": "2021-06-08", "remote": true  } },
+    { "id": 42, "name": "Pete Peters",   "age": 28, "department": "Design",      "salary": 875,  "active": true,  "address": { "city": "Clarksville",   "state": "TN" }, "skills": ["Sketch", "Figma"],          "metadata": { "joined": "2022-02-24", "remote": false } },
+    { "id": 43, "name": "Rita Rogers",   "age": 34, "department": "Marketing",   "salary": 895,  "active": true,  "address": { "city": "Murfreesboro",  "state": "TN" }, "skills": ["Content", "Video"],         "metadata": { "joined": "2018-09-16", "remote": false } },
+    { "id": 44, "name": "Stan Stone",    "age": 26, "department": "Engineering", "salary": 840,  "active": false, "address": { "city": "Lexington",     "state": "KY" }, "skills": ["TypeScript", "Node.js"],    "metadata": { "joined": "2023-03-10", "remote": true  } },
+    { "id": 45, "name": "Tara Torres",   "age": 30, "department": "Sales",       "salary": 930,  "active": true,  "address": { "city": "Anchorage",     "state": "AK" }, "skills": ["CRM", "Negotiation"],       "metadata": { "joined": "2020-01-27", "remote": false } },
+    { "id": 46, "name": "Ulric Upton",   "age": 33, "department": "Operations",  "salary": 870,  "active": true,  "address": { "city": "Juneau",        "state": "AK" }, "skills": ["Process"],                  "metadata": { "joined": "2019-07-15", "remote": false } },
+    { "id": 47, "name": "Vera Vargas",   "age": 28, "department": "Engineering", "salary": 930,  "active": true,  "address": { "city": "Honolulu",      "state": "HI" }, "skills": ["Ruby", "Rails"],            "metadata": { "joined": "2021-08-22", "remote": false } },
+    { "id": 48, "name": "Will Wright",   "age": 31, "department": "Design",      "salary": 900,  "active": true,  "address": { "city": "Burlington",    "state": "VT" }, "skills": ["Motion Design", "Cinema4D"], "metadata": { "joined": "2020-03-04", "remote": false, "portfolio": "https://willwright.design" } },
+    { "id": 49, "name": "Xia Xu",        "age": 27, "department": "Marketing",   "salary": 840,  "active": true,  "address": { "city": "Montpelier",    "state": "VT" }, "skills": ["PPC"],                      "metadata": { "joined": "2022-06-20", "remote": true  } },
+    { "id": 50, "name": "Yuki Yamamoto", "age": 35, "department": "Engineering", "salary": 1160, "active": true,  "address": { "city": "Concord",       "state": "NH" }, "skills": ["Java", "Kafka"],            "metadata": { "joined": "2017-10-11", "remote": false } }
+  ]
 }

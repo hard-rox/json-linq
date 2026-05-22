@@ -16,10 +16,11 @@ public class MatcherBenchmarks
         _matcher = new Matcher();
         _testNode = JsonNode.Parse("""
         {
-            "name": "Ava",
-            "age": 30,
-            "salary": 1000,
-            "active": true
+            "name": "Alice",
+            "age": 32,
+            "salary": 95000,
+            "active": true,
+            "department": "Engineering"
         }
         """);
     }
@@ -27,13 +28,13 @@ public class MatcherBenchmarks
     [Benchmark]
     public bool EqualityOperator()
     {
-        return _matcher.IsMatch(_testNode, new JsonCondition("name", "==", "Ava"));
+        return _matcher.IsMatch(_testNode, new JsonCondition("name", "==", "Alice"));
     }
 
     [Benchmark]
     public bool InequalityOperator()
     {
-        return _matcher.IsMatch(_testNode, new JsonCondition("name", "!=", "Ben"));
+        return _matcher.IsMatch(_testNode, new JsonCondition("name", "!=", "Bob"));
     }
 
     [Benchmark]
@@ -45,12 +46,12 @@ public class MatcherBenchmarks
     [Benchmark]
     public bool LessThanOperator()
     {
-        return _matcher.IsMatch(_testNode, new JsonCondition("salary", "<", 1200));
+        return _matcher.IsMatch(_testNode, new JsonCondition("salary", "<", 100000));
     }
 
     [Benchmark]
     public bool ContainsOperator()
     {
-        return _matcher.IsMatch(_testNode, new JsonCondition("name", "contains", "va"));
+        return _matcher.IsMatch(_testNode, new JsonCondition("name", "contains", "Ali"));
     }
 }

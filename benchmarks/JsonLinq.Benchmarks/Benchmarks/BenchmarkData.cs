@@ -8,44 +8,44 @@ internal static class BenchmarkData
 {
     internal const string SmallJson = """
         {
-          "users": [
-            { "id": 1, "name": "Ava Adams", "age": 30, "department": "Engineering", "salary": 1000, "active": true },
-            { "id": 2, "name": "Ben Brown", "age": 25, "department": "Engineering", "salary": 800, "active": true },
-            { "id": 3, "name": "Cara Chen", "age": 29, "department": "Sales", "salary": 900, "active": false },
-            { "id": 4, "name": "David Davis", "age": 35, "department": "Engineering", "salary": 1200, "active": true },
-            { "id": 5, "name": "Eva Evans", "age": 28, "department": "Marketing", "salary": 850, "active": true },
-            { "id": 6, "name": "Frank Foster", "age": 32, "department": "Sales", "salary": 950, "active": true },
-            { "id": 7, "name": "Grace Green", "age": 27, "department": "Engineering", "salary": 900, "active": false },
-            { "id": 8, "name": "Hank Harris", "age": 31, "department": "Marketing", "salary": 880, "active": true },
-            { "id": 9, "name": "Iris Islam", "age": 26, "department": "Sales", "salary": 870, "active": true },
-            { "id": 10, "name": "Jack Johnson", "age": 33, "department": "Engineering", "salary": 1100, "active": true }
+          "employees": [
+            { "id": 1, "name": "Alice Adams", "age": 30, "department": "Engineering", "salary": 1000, "active": true, "address": { "city": "San Francisco", "state": "CA" }, "skills": ["C#", "Python"] },
+            { "id": 2, "name": "Bob Brown", "age": 25, "department": "Engineering", "salary": 800, "active": true, "address": { "city": "Oakland", "state": "CA" }, "skills": ["TypeScript", "React"] },
+            { "id": 3, "name": "Carol Chen", "age": 29, "department": "Sales", "salary": 900, "active": false, "address": { "city": "Los Angeles", "state": "CA" }, "skills": ["Salesforce", "CRM"] },
+            { "id": 4, "name": "David Davis", "age": 35, "department": "Engineering", "salary": 1200, "active": true, "address": { "city": "San Jose", "state": "CA" }, "skills": ["Rust", "Go"] },
+            { "id": 5, "name": "Eva Evans", "age": 28, "department": "Marketing", "salary": 850, "active": true, "address": { "city": "Seattle", "state": "WA" }, "skills": ["SEO", "Analytics"] },
+            { "id": 6, "name": "Frank Foster", "age": 32, "department": "Sales", "salary": 950, "active": true, "address": { "city": "Denver", "state": "CO" }, "skills": ["Negotiation"] },
+            { "id": 7, "name": "Grace Green", "age": 27, "department": "Engineering", "salary": 900, "active": false, "address": { "city": "Austin", "state": "TX" }, "skills": ["Java", "Kotlin"] },
+            { "id": 8, "name": "Hank Harris", "age": 31, "department": "Marketing", "salary": 880, "active": true, "address": { "city": "Chicago", "state": "IL" }, "skills": ["Content", "Branding"] },
+            { "id": 9, "name": "Iris Islam", "age": 26, "department": "Sales", "salary": 870, "active": true, "address": { "city": "Phoenix", "state": "AZ" }, "skills": ["CRM"] },
+            { "id": 10, "name": "Jack Johnson", "age": 33, "department": "Engineering", "salary": 1100, "active": true, "address": { "city": "Boston", "state": "MA" }, "skills": ["C++", "Embedded"] }
           ]
         }
         """;
 
     internal const string MediumJson = """
         {
-          "users": [
-            { "id": 1, "name": "User 1", "age": 30, "department": "Engineering", "salary": 1000, "active": true },
-            { "id": 2, "name": "User 2", "age": 25, "department": "Engineering", "salary": 800, "active": true },
-            { "id": 3, "name": "User 3", "age": 29, "department": "Sales", "salary": 900, "active": false },
-            { "id": 4, "name": "User 4", "age": 35, "department": "Engineering", "salary": 1200, "active": true },
-            { "id": 5, "name": "User 5", "age": 28, "department": "Marketing", "salary": 850, "active": true },
-            { "id": 6, "name": "User 6", "age": 32, "department": "Sales", "salary": 950, "active": true },
-            { "id": 7, "name": "User 7", "age": 27, "department": "Engineering", "salary": 900, "active": false },
-            { "id": 8, "name": "User 8", "age": 31, "department": "Marketing", "salary": 880, "active": true },
-            { "id": 9, "name": "User 9", "age": 26, "department": "Sales", "salary": 870, "active": true },
-            { "id": 10, "name": "User 10", "age": 33, "department": "Engineering", "salary": 1100, "active": true },
-            { "id": 11, "name": "User 11", "age": 29, "department": "Engineering", "salary": 950, "active": true },
-            { "id": 12, "name": "User 12", "age": 31, "department": "Sales", "salary": 920, "active": true },
-            { "id": 13, "name": "User 13", "age": 28, "department": "Marketing", "salary": 860, "active": false },
-            { "id": 14, "name": "User 14", "age": 34, "department": "Engineering", "salary": 1150, "active": true },
-            { "id": 15, "name": "User 15", "age": 26, "department": "Sales", "salary": 880, "active": true },
-            { "id": 16, "name": "User 16", "age": 30, "department": "Marketing", "salary": 870, "active": true },
-            { "id": 17, "name": "User 17", "age": 32, "department": "Engineering", "salary": 1080, "active": false },
-            { "id": 18, "name": "User 18", "age": 27, "department": "Sales", "salary": 900, "active": true },
-            { "id": 19, "name": "User 19", "age": 29, "department": "Marketing", "salary": 845, "active": true },
-            { "id": 20, "name": "User 20", "age": 35, "department": "Engineering", "salary": 1180, "active": true }
+          "employees": [
+            { "id": 1, "name": "Alice Adams", "age": 30, "department": "Engineering", "salary": 1000, "active": true, "address": { "city": "San Francisco", "state": "CA" }, "skills": ["C#", "Python"] },
+            { "id": 2, "name": "Bob Brown", "age": 25, "department": "Engineering", "salary": 800, "active": true, "address": { "city": "Oakland", "state": "CA" }, "skills": ["TypeScript", "React"] },
+            { "id": 3, "name": "Carol Chen", "age": 29, "department": "Sales", "salary": 900, "active": false, "address": { "city": "Los Angeles", "state": "CA" }, "skills": ["Salesforce", "CRM"] },
+            { "id": 4, "name": "David Davis", "age": 35, "department": "Engineering", "salary": 1200, "active": true, "address": { "city": "San Jose", "state": "CA" }, "skills": ["Rust", "Go"] },
+            { "id": 5, "name": "Eva Evans", "age": 28, "department": "Marketing", "salary": 850, "active": true, "address": { "city": "Seattle", "state": "WA" }, "skills": ["SEO", "Analytics"] },
+            { "id": 6, "name": "Frank Foster", "age": 32, "department": "Sales", "salary": 950, "active": true, "address": { "city": "Denver", "state": "CO" }, "skills": ["Negotiation"] },
+            { "id": 7, "name": "Grace Green", "age": 27, "department": "Engineering", "salary": 900, "active": false, "address": { "city": "Austin", "state": "TX" }, "skills": ["Java", "Kotlin"] },
+            { "id": 8, "name": "Hank Harris", "age": 31, "department": "Marketing", "salary": 880, "active": true, "address": { "city": "Chicago", "state": "IL" }, "skills": ["Content", "Branding"] },
+            { "id": 9, "name": "Iris Islam", "age": 26, "department": "Sales", "salary": 870, "active": true, "address": { "city": "Phoenix", "state": "AZ" }, "skills": ["CRM"] },
+            { "id": 10, "name": "Jack Johnson", "age": 33, "department": "Engineering", "salary": 1100, "active": true, "address": { "city": "Boston", "state": "MA" }, "skills": ["C++", "Embedded"] },
+            { "id": 11, "name": "Karen King", "age": 29, "department": "Engineering", "salary": 950, "active": true, "address": { "city": "Portland", "state": "OR" }, "skills": ["Kubernetes", "DevOps"] },
+            { "id": 12, "name": "Leo Lopez", "age": 31, "department": "Sales", "salary": 920, "active": true, "address": { "city": "Miami", "state": "FL" }, "skills": ["CRM", "HubSpot"] },
+            { "id": 13, "name": "Mia Miller", "age": 28, "department": "Marketing", "salary": 860, "active": false, "address": { "city": "Atlanta", "state": "GA" }, "skills": ["Content"] },
+            { "id": 14, "name": "Noah Nelson", "age": 34, "department": "Engineering", "salary": 1150, "active": true, "address": { "city": "Dallas", "state": "TX" }, "skills": ["Python", "ML"] },
+            { "id": 15, "name": "Olivia Ortiz", "age": 26, "department": "Sales", "salary": 880, "active": true, "address": { "city": "Las Vegas", "state": "NV" }, "skills": ["Negotiation", "Salesforce"] },
+            { "id": 16, "name": "Paul Park", "age": 30, "department": "Design", "salary": 870, "active": true, "address": { "city": "Minneapolis", "state": "MN" }, "skills": ["Figma", "Sketch"] },
+            { "id": 17, "name": "Quinn Quinn", "age": 32, "department": "Engineering", "salary": 1080, "active": false, "address": { "city": "Salt Lake City", "state": "UT" }, "skills": ["Go", "gRPC"] },
+            { "id": 18, "name": "Rachel Reed", "age": 27, "department": "Sales", "salary": 900, "active": true, "address": { "city": "Nashville", "state": "TN" }, "skills": ["CRM"] },
+            { "id": 19, "name": "Sam Scott", "age": 29, "department": "Marketing", "salary": 845, "active": true, "address": { "city": "Columbus", "state": "OH" }, "skills": ["SEO", "PPC"] },
+            { "id": 20, "name": "Tina Taylor", "age": 35, "department": "Engineering", "salary": 1180, "active": true, "address": { "city": "San Diego", "state": "CA" }, "skills": ["C#", "Azure"] }
           ]
         }
         """;

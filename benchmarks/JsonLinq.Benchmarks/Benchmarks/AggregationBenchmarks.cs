@@ -12,8 +12,8 @@ public class AggregationBenchmarks
     [GlobalSetup]
     public void Setup()
     {
-        _querySmall = JsonQuery.Parse(BenchmarkData.SmallJson).From("users");
-        _queryMedium = JsonQuery.Parse(BenchmarkData.MediumJson).From("users");
+        _querySmall = JsonQuery.Parse(BenchmarkData.SmallJson).From("employees");
+        _queryMedium = JsonQuery.Parse(BenchmarkData.MediumJson).From("employees");
     }
 
     [Benchmark]
@@ -23,7 +23,7 @@ public class AggregationBenchmarks
     public decimal SumMedium() => _queryMedium.Sum("salary");
 
     [Benchmark]
-    public decimal AvgSmall() => _querySmall.Avg("salary");
+    public decimal AvgSmall() => _querySmall.Average("salary");
 
     [Benchmark]
     public decimal MinSmall() => _querySmall.Min("salary");
