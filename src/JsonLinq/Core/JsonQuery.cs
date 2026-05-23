@@ -1,3 +1,4 @@
+using JsonLinq.Exceptions;
 using JsonLinq.Utilities;
 
 namespace JsonLinq.Core;
@@ -10,15 +11,12 @@ public sealed class JsonQuery
     private readonly JsonNode _root;
     private readonly IReadOnlyList<JsonNode?> _scope;
     private readonly IReadOnlyList<JsonNode?> _result;
-    private readonly QueryEngine _engine;
 
-    private JsonQuery(JsonNode root, IReadOnlyList<JsonNode?> scope, IReadOnlyList<JsonNode?> result,
-        QueryEngine engine)
+    private JsonQuery(JsonNode root, IReadOnlyList<JsonNode?> scope, IReadOnlyList<JsonNode?> result)
     {
         _root = root;
         _scope = scope;
         _result = result;
-        _engine = engine;
     }
 
     /// <summary>
@@ -28,7 +26,7 @@ public sealed class JsonQuery
     {
         JsonNode root = JsonParser.Parse(json);
         ReadOnlyCollection<JsonNode?> seed = new List<JsonNode?> { root }.AsReadOnly();
-        return new JsonQuery(root, seed, seed, new QueryEngine());
+        return new JsonQuery(root, seed, seed);
     }
 
     /// <summary>
@@ -38,7 +36,7 @@ public sealed class JsonQuery
     {
         JsonNode root = JsonParser.ParseFile(filePath);
         ReadOnlyCollection<JsonNode?> seed = new List<JsonNode?> { root }.AsReadOnly();
-        return new JsonQuery(root, seed, seed, new QueryEngine());
+        return new JsonQuery(root, seed, seed);
     }
 
     /// <summary>
@@ -48,7 +46,7 @@ public sealed class JsonQuery
     {
         JsonNode root = await JsonParser.ParseFileAsync(filePath, cancellationToken).ConfigureAwait(false);
         ReadOnlyCollection<JsonNode?> seed = new List<JsonNode?> { root }.AsReadOnly();
-        return new JsonQuery(root, seed, seed, new QueryEngine());
+        return new JsonQuery(root, seed, seed);
     }
 
     /// <summary>
@@ -69,7 +67,7 @@ public sealed class JsonQuery
             collection = new List<JsonNode?> { node }.AsReadOnly();
         }
 
-        return new JsonQuery(_root, collection, collection, _engine);
+        return new JsonQuery(_root, collection, collection);
     }
 
     /// <summary>
@@ -88,7 +86,7 @@ public sealed class JsonQuery
     public JsonQuery Where(Func<JsonNode?, bool> predicate)
     {
         IReadOnlyList<JsonNode?> filtered = _result.Where(predicate).ToList().AsReadOnly();
-        return new JsonQuery(_root, _scope, filtered, _engine);
+        return new JsonQuery(_root, _scope, filtered);
     }
 
     /// <summary>
@@ -96,8 +94,8 @@ public sealed class JsonQuery
     /// </summary>
     public JsonQuery OrderBy(string field)
     {
-        IReadOnlyList<JsonNode?> sorted = _engine.Sort(_result, field, descending: false);
-        return new JsonQuery(_root, _scope, sorted, _engine);
+        IReadOnlyList<JsonNode?> sorted = Sort(_result, field, descending: false);
+        return new JsonQuery(_root, _scope, sorted);
     }
 
     /// <summary>
@@ -105,8 +103,8 @@ public sealed class JsonQuery
     /// </summary>
     public JsonQuery OrderByDescending(string field)
     {
-        IReadOnlyList<JsonNode?> sorted = _engine.Sort(_result, field, descending: true);
-        return new JsonQuery(_root, _scope, sorted, _engine);
+        IReadOnlyList<JsonNode?> sorted = Sort(_result, field, descending: true);
+        return new JsonQuery(_root, _scope, sorted);
     }
 
     /// <summary>
@@ -114,7 +112,7 @@ public sealed class JsonQuery
     /// </summary>
     public JsonQuery GroupBy(string field)
     {
-        IReadOnlyDictionary<string, IReadOnlyList<JsonNode?>> grouped = _engine.GroupBy(_result, field);
+        IReadOnlyDictionary<string, IReadOnlyList<JsonNode?>> grouped = GroupByField(_result, field);
         ReadOnlyCollection<JsonNode?> nodes = grouped
             .Select(x => new JsonObject
             {
@@ -125,7 +123,7 @@ public sealed class JsonQuery
             .ToList()
             .AsReadOnly();
 
-        return new JsonQuery(_root, nodes, nodes, _engine);
+        return new JsonQuery(_root, nodes, nodes);
     }
 
     /// <summary>
@@ -145,7 +143,7 @@ public sealed class JsonQuery
         }
 
         ReadOnlyCollection<JsonNode?> readOnly = list.AsReadOnly();
-        return new JsonQuery(_root, readOnly, readOnly, _engine);
+        return new JsonQuery(_root, readOnly, readOnly);
     }
 
     /// <summary>
@@ -156,7 +154,7 @@ public sealed class JsonQuery
         JsonNode newRoot = _root.DeepClone();
         ReadOnlyCollection<JsonNode?> newScope = _scope.Select(x => x?.DeepClone()).ToList().AsReadOnly();
         ReadOnlyCollection<JsonNode?> newResult = _result.Select(x => x?.DeepClone()).ToList().AsReadOnly();
-        return new JsonQuery(newRoot, newScope, newResult, _engine);
+        return new JsonQuery(newRoot, newScope, newResult);
     }
 
     /// <summary>
@@ -169,7 +167,7 @@ public sealed class JsonQuery
             .ToList()
             .AsReadOnly();
 
-        return new JsonQuery(_root, _scope, distinct, _engine);
+        return new JsonQuery(_root, _scope, distinct);
     }
 
     /// <summary>
@@ -214,22 +212,34 @@ public sealed class JsonQuery
     /// <summary>
     /// Returns sum value for field.
     /// </summary>
-    public decimal Sum(string field) => _engine.Sum(_result, field);
+    public decimal Sum(string field) => SumNumbers(_result, field);
 
     /// <summary>
     /// Returns the average value for a numeric field.
     /// </summary>
-    public decimal Average(string field) => _engine.Average(_result, field);
+    public decimal Average(string field)
+    {
+        List<decimal> values = SelectNumbers(_result, field).ToList();
+        return values.Count == 0 ? 0M : values.Average();
+    }
 
     /// <summary>
     /// Returns max value for field.
     /// </summary>
-    public decimal Max(string field) => _engine.Max(_result, field);
+    public decimal Max(string field)
+    {
+        List<decimal> values = SelectNumbers(_result, field).ToList();
+        return values.Count == 0 ? 0M : values.Max();
+    }
 
     /// <summary>
     /// Returns min value for field.
     /// </summary>
-    public decimal Min(string field) => _engine.Min(_result, field);
+    public decimal Min(string field)
+    {
+        List<decimal> values = SelectNumbers(_result, field).ToList();
+        return values.Count == 0 ? 0M : values.Min();
+    }
 
     /// <summary>
     /// Projects each result node to a new object containing only the specified fields.
@@ -255,7 +265,7 @@ public sealed class JsonQuery
             .ToList()
             .AsReadOnly();
 
-        return new JsonQuery(_root, projected, projected, _engine);
+        return new JsonQuery(_root, projected, projected);
     }
 
     /// <summary>
@@ -269,7 +279,7 @@ public sealed class JsonQuery
         }
 
         ReadOnlyCollection<JsonNode?> taken = _result.Take(count).ToList().AsReadOnly();
-        return new JsonQuery(_root, _scope, taken, _engine);
+        return new JsonQuery(_root, _scope, taken);
     }
 
     /// <summary>
@@ -283,7 +293,7 @@ public sealed class JsonQuery
         }
 
         ReadOnlyCollection<JsonNode?> remaining = _result.Skip(count).ToList().AsReadOnly();
-        return new JsonQuery(_root, _scope, remaining, _engine);
+        return new JsonQuery(_root, _scope, remaining);
     }
 
     /// <summary>
@@ -293,4 +303,62 @@ public sealed class JsonQuery
     /// A read-only list containing the JSON nodes that match the query result.
     /// </returns>
     public IReadOnlyList<JsonNode?> ToList() => _result;
+
+    // ── Private static helpers (inlined from QueryEngine) ─────────────────────
+
+    private static IReadOnlyList<JsonNode?> Sort(IEnumerable<JsonNode?> source, string path, bool descending)
+    {
+        IOrderedEnumerable<JsonNode?> sorted = descending
+            ? source.OrderByDescending(x => JsonValueHelper.ToComparable(PathResolver.Resolve(x, path)))
+            : source.OrderBy(x => JsonValueHelper.ToComparable(PathResolver.Resolve(x, path)));
+
+        return sorted.ToList().AsReadOnly();
+    }
+
+    private static IReadOnlyDictionary<string, IReadOnlyList<JsonNode?>> GroupByField(IEnumerable<JsonNode?> source, string path)
+    {
+        Dictionary<string, IReadOnlyList<JsonNode?>> grouped = source
+            .GroupBy(x => JsonValueHelper.ToComparable(PathResolver.Resolve(x, path))?.ToString() ?? string.Empty)
+            .ToDictionary(
+                x => x.Key,
+                x => (IReadOnlyList<JsonNode?>)x.ToList().AsReadOnly(),
+                StringComparer.Ordinal);
+
+        return new ReadOnlyDictionary<string, IReadOnlyList<JsonNode?>>(grouped);
+    }
+
+    private static decimal SumNumbers(IEnumerable<JsonNode?> source, string path) =>
+        SelectNumbers(source, path).Sum();
+
+    private static IEnumerable<decimal> SelectNumbers(IEnumerable<JsonNode?> source, string path)
+    {
+        foreach (JsonNode? node in source)
+        {
+            JsonNode? valueNode = string.IsNullOrWhiteSpace(path) ? node : PathResolver.Resolve(node, path);
+            if (valueNode is not JsonValue value)
+            {
+                continue;
+            }
+
+            if (value.TryGetValue(out decimal decimalValue))
+            {
+                yield return decimalValue;
+                continue;
+            }
+
+            if (value.TryGetValue(out double doubleValue))
+            {
+                yield return (decimal)doubleValue;
+                continue;
+            }
+
+            if (value.TryGetValue(out long longValue))
+            {
+                yield return longValue;
+                continue;
+            }
+
+            throw new JsonQueryException($"Value at '{path}' is not numeric.");
+        }
+    }
 }
