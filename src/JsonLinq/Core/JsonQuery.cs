@@ -219,7 +219,7 @@ public sealed class JsonQuery
     /// <summary>
     /// Returns the average value for a numeric field.
     /// </summary>
-    public decimal Average(string field) => _engine.Avg(_result, field);
+    public decimal Average(string field) => _engine.Average(_result, field);
 
     /// <summary>
     /// Returns max value for field.

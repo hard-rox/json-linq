@@ -47,7 +47,7 @@ public sealed class QueryEngine
     /// <summary>
     /// Returns an average for a numeric path.
     /// </summary>
-    public decimal Avg(IEnumerable<JsonNode?> source, string path)
+    public decimal Average(IEnumerable<JsonNode?> source, string path)
     {
         List<decimal> values = SelectNumbers(source, path).ToList();
         return values.Count == 0 ? 0M : values.Average();
@@ -81,19 +81,19 @@ public sealed class QueryEngine
                 continue;
             }
 
-            if (value.TryGetValue<decimal>(out decimal decimalValue))
+            if (value.TryGetValue(out decimal decimalValue))
             {
                 yield return decimalValue;
                 continue;
             }
 
-            if (value.TryGetValue<double>(out double doubleValue))
+            if (value.TryGetValue(out double doubleValue))
             {
                 yield return (decimal)doubleValue;
                 continue;
             }
 
-            if (value.TryGetValue<long>(out long longValue))
+            if (value.TryGetValue(out long longValue))
             {
                 yield return longValue;
                 continue;

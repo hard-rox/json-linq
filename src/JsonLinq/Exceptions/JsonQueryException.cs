@@ -6,7 +6,7 @@ namespace JsonLinq.Exceptions;
 public class JsonQueryException : Exception
 {
     /// <summary>
-    /// Creates an exception with message.
+    /// Creates an exception with a message.
     /// </summary>
     public JsonQueryException(string message)
         : base(message)
@@ -14,7 +14,7 @@ public class JsonQueryException : Exception
     }
 
     /// <summary>
-    /// Creates an exception with message and inner exception.
+    /// Creates an exception with a message and inner exception.
     /// </summary>
     public JsonQueryException(string message, Exception innerException)
         : base(message, innerException)

@@ -12,29 +12,29 @@ internal static class JsonValueHelper
         };
     }
 
-    private static object? ConvertJsonValue(JsonValue value)
+    private static object ConvertJsonValue(JsonValue value)
     {
-        if (value.TryGetValue<bool>(out bool boolValue))
+        if (value.TryGetValue(out bool boolValue))
         {
             return boolValue;
         }
 
-        if (value.TryGetValue<long>(out long longValue))
+        if (value.TryGetValue(out long longValue))
         {
             return longValue;
         }
 
-        if (value.TryGetValue<double>(out double doubleValue))
+        if (value.TryGetValue(out double doubleValue))
         {
             return doubleValue;
         }
 
-        if (value.TryGetValue<decimal>(out decimal decimalValue))
+        if (value.TryGetValue(out decimal decimalValue))
         {
             return decimalValue;
         }
 
-        if (value.TryGetValue<string>(out string? stringValue))
+        if (value.TryGetValue(out string? stringValue))
         {
             return stringValue;
         }
