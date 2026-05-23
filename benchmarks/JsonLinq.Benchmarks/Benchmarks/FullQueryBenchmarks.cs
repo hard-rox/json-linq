@@ -1,5 +1,6 @@
 using BenchmarkDotNet.Attributes;
 using JsonLinq.Core;
+using JsonLinq.Extensions;
 
 namespace JsonLinq.Benchmarks.Benchmarks;
 
@@ -13,7 +14,7 @@ public class FullQueryBenchmarks
     public int ComplexQueryChainSmall() =>
         JsonQuery.Parse(BenchmarkData.SmallJson)
             .From("employees")
-            .Where("department", "==", "Engineering")
+            .Where(n => n.Value<string>("department") == "Engineering")
             .OrderByDescending("salary")
             .Count();
 
@@ -21,14 +22,14 @@ public class FullQueryBenchmarks
     public int FilterAndAggregateSmall() =>
         JsonQuery.Parse(BenchmarkData.SmallJson)
             .From("employees")
-            .Where("active", "==", true)
+            .Where(n => n.Value<bool>("active") == true)
             .Count();
 
     [Benchmark]
     public int FilterAndGroupSmall() =>
         JsonQuery.Parse(BenchmarkData.SmallJson)
             .From("employees")
-            .Where("age", ">", 26)
+            .Where(n => n.Value<int>("age") > 26)
             .GroupBy("department")
             .Count();
 
@@ -36,8 +37,8 @@ public class FullQueryBenchmarks
     public int ComplexQueryChainMedium() =>
         JsonQuery.Parse(BenchmarkData.MediumJson)
             .From("employees")
-            .Where("department", "==", "Engineering")
-            .Where("salary", ">", 900)
+            .Where(n => n.Value<string>("department") == "Engineering")
+            .Where(n => n.Value<decimal>("salary") > 900)
             .OrderBy("age")
             .Count();
 
@@ -45,8 +46,8 @@ public class FullQueryBenchmarks
     public int MultiOrWhereSmall() =>
         JsonQuery.Parse(BenchmarkData.SmallJson)
             .From("employees")
-            .Where("department", "==", "Engineering")
-            .OrWhere("department", "==", "Sales")
-            .OrWhere("department", "==", "Marketing")
+            .Where(n => n.Value<string>("department") == "Engineering"
+                     || n.Value<string>("department") == "Sales"
+                     || n.Value<string>("department") == "Marketing")
             .Count();
 }

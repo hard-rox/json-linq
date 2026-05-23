@@ -103,24 +103,11 @@ public sealed class JsonQueryTests
     }
 
     [Fact]
-    public void OrWhere_Predicate_UnionsResults()
+    public void Where_OrPredicate_CombinesResults()
     {
         int count = JsonQuery.Parse(_fixture.Json)
             .From("employees")
-            .Where(n => n.Value<string>("name") == "Alice")
-            .OrWhere(n => n.Value<string>("name") == "Bob")
-            .Count();
-
-        Assert.Equal(2, count);
-    }
-
-    [Fact]
-    public void OrWhere_CombinesFilteredResults()
-    {
-        int count = JsonQuery.Parse(_fixture.Json)
-            .From("employees")
-            .Where("name", "==", "Alice")
-            .OrWhere("name", "==", "Bob")
+            .Where(n => n.Value<string>("name") == "Alice" || n.Value<string>("name") == "Bob")
             .Count();
 
         Assert.Equal(2, count);
@@ -212,7 +199,7 @@ public sealed class JsonQueryTests
     {
         bool exists = JsonQuery.Parse(_fixture.Json)
             .From("employees")
-            .Where("name", "==", "DoesNotExist")
+            .Where(n => n.Value<string>("name") == "DoesNotExist")
             .Exists();
         Assert.False(exists);
     }
@@ -264,7 +251,7 @@ public sealed class JsonQueryTests
     {
         JsonNode? result = JsonQuery.Parse(_fixture.Json)
             .From("employees")
-            .Where("name", "==", "DoesNotExist")
+            .Where(n => n.Value<string>("name") == "DoesNotExist")
             .SingleOrDefault();
 
         Assert.Null(result);
@@ -275,7 +262,7 @@ public sealed class JsonQueryTests
     {
         JsonNode? result = JsonQuery.Parse(_fixture.Json)
             .From("employees")
-            .Where("name", "==", "Alice")
+            .Where(n => n.Value<string>("name") == "Alice")
             .SingleOrDefault();
 
         Assert.NotNull(result);
@@ -328,16 +315,6 @@ public sealed class JsonQueryTests
     public void EmptyArray_Count_ReturnsZeroNotThrow()
     {
         int count = JsonQuery.Parse("{\"employees\":[]}").From("employees").Count();
-        Assert.Equal(0, count);
-    }
-
-    [Fact]
-    public void Where_MissingField_SilentlyNonMatches()
-    {
-        int count = JsonQuery.Parse(_fixture.Json)
-            .From("employees")
-            .Where("nonexistent", "==", "x")
-            .Count();
         Assert.Equal(0, count);
     }
 }

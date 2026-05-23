@@ -1,5 +1,6 @@
 using BenchmarkDotNet.Attributes;
 using JsonLinq.Core;
+using JsonLinq.Extensions;
 
 namespace JsonLinq.Benchmarks.Benchmarks;
 
@@ -18,27 +19,26 @@ public class FilterBenchmarks
 
     [Benchmark]
     public int SimpleWhereSmall() =>
-        _querySmall.Where("department", "==", "Engineering").Count();
+        _querySmall.Where(n => n.Value<string>("department") == "Engineering").Count();
 
     [Benchmark]
     public int SimpleWhereMedium() =>
-        _queryMedium.Where("department", "==", "Engineering").Count();
+        _queryMedium.Where(n => n.Value<string>("department") == "Engineering").Count();
 
     [Benchmark]
     public int MultipleWheresSmall() =>
         _querySmall
-            .Where("department", "==", "Engineering")
-            .Where("active", "==", true)
+            .Where(n => n.Value<string>("department") == "Engineering")
+            .Where(n => n.Value<bool>("active") == true)
             .Count();
 
     [Benchmark]
     public int OrWhereSmall() =>
         _querySmall
-            .Where("department", "==", "Engineering")
-            .OrWhere("department", "==", "Sales")
+            .Where(n => n.Value<string>("department") == "Engineering" || n.Value<string>("department") == "Sales")
             .Count();
 
     [Benchmark]
     public int NumericComparisonSmall() =>
-        _querySmall.Where("salary", ">", 900).Count();
+        _querySmall.Where(n => n.Value<decimal>("salary") > 900).Count();
 }

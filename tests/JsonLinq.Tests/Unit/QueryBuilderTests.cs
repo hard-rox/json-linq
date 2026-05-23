@@ -1,4 +1,5 @@
 using JsonLinq.Core;
+using JsonLinq.Extensions;
 using JsonLinq.Tests.Fixtures;
 
 namespace JsonLinq.Tests.Unit;
@@ -12,7 +13,7 @@ public sealed class QueryBuilderTests
     {
         int count = JsonQuery.Parse(_fixture.Json)
             .From("employees")
-            .Where("department", "==", "Engineering")
+            .Where(n => n.Value<string>("department") == "Engineering")
             .Count();
 
         Assert.Equal(2, count);
