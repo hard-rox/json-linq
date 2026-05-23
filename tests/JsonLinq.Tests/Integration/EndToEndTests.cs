@@ -1,4 +1,3 @@
-using JsonLinq.Extensions;
 using JsonLinq.Tests.Fixtures;
 
 namespace JsonLinq.Tests.Integration;

@@ -13,7 +13,7 @@ src/JsonLinq/
   Core/
     JsonQuery.cs          # Single fluent API class — all query methods live here
   Extensions/
-    JsonNodeExtensions.cs # Value<T>(key) and ValueAt<T>(path) extension methods on JsonNode?
+    JsonNodeExtensions.cs # Value<T>(key) and ValueAt<T>(path) extension methods on JsonNode? — namespace JsonLinq (same as JsonQuery)
     LinqExtensions.cs     # (currently empty shell)
   Utilities/
     PathResolver.cs       # Dot-notated path resolution: "employees.0.address.city"

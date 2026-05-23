@@ -1,5 +1,4 @@
 using System.Text.Json.Nodes;
-using JsonLinq.Extensions;
 
 namespace JsonLinq.Examples.Scenarios;
 

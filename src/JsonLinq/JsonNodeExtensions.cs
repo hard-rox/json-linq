@@ -1,6 +1,6 @@
 using JsonLinq.Utilities;
 
-namespace JsonLinq.Extensions;
+namespace JsonLinq;
 
 /// <summary>
 /// Extension methods on <see cref="JsonNode"/> for concise value access inside predicates.
