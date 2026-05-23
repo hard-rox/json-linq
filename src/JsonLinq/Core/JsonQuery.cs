@@ -85,6 +85,15 @@ public sealed class JsonQuery
     /// <summary>
     /// Filters the current results using a predicate.
     /// </summary>
+    public JsonQuery Where(Func<JsonNode?, bool> predicate)
+    {
+        IReadOnlyList<JsonNode?> filtered = _result.Where(predicate).ToList().AsReadOnly();
+        return new JsonQuery(_root, _scope, filtered, _engine);
+    }
+
+    /// <summary>
+    /// Filters the current results using a field/operator/value condition.
+    /// </summary>
     public JsonQuery Where(string field, string op, object? value)
     {
         IReadOnlyList<JsonNode?> filtered = _result.Where(n => JsonConditionEvaluator.Evaluate(n, field, op, value))
@@ -94,6 +103,21 @@ public sealed class JsonQuery
 
     /// <summary>
     /// Unions the current results with nodes from scope matching a predicate.
+    /// </summary>
+    public JsonQuery OrWhere(Func<JsonNode?, bool> predicate)
+    {
+        IReadOnlyList<JsonNode?> filteredFromScope = _scope.Where(predicate).ToList().AsReadOnly();
+        ReadOnlyCollection<JsonNode?> union = _result
+            .Concat(filteredFromScope)
+            .DistinctBy(x => x?.ToJsonString() ?? string.Empty)
+            .ToList()
+            .AsReadOnly();
+
+        return new JsonQuery(_root, _scope, union, _engine);
+    }
+
+    /// <summary>
+    /// Unions the current results with nodes from scope matching a field/operator/value condition.
     /// </summary>
     public JsonQuery OrWhere(string field, string op, object? value)
     {

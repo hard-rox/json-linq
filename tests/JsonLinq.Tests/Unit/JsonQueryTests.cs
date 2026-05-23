@@ -1,4 +1,5 @@
 using JsonLinq.Core;
+using JsonLinq.Extensions;
 using JsonLinq.Tests.Fixtures;
 
 namespace JsonLinq.Tests.Unit;
@@ -65,6 +66,53 @@ public sealed class JsonQueryTests
     }
 
     // ── Filtering ─────────────────────────────────────────────────────────────
+
+    [Fact]
+    public void Where_Predicate_FiltersCorrectly()
+    {
+        IReadOnlyList<JsonNode?> result = JsonQuery.Parse(_fixture.Json)
+            .From("employees")
+            .Where(n => n.Value<string>("department") == "Engineering")
+            .ToList();
+
+        Assert.Equal(2, result.Count);
+        Assert.All(result, n => Assert.Equal("Engineering", JsonTestHelper.GetString(n, "department")));
+    }
+
+    [Fact]
+    public void Where_Predicate_NestedPath_FiltersCorrectly()
+    {
+        IReadOnlyList<JsonNode?> result = JsonQuery.Parse(_fixture.Json)
+            .From("employees")
+            .Where(n => n.ValueAt<string>("address.city") == "Oakland")
+            .ToList();
+
+        Assert.Single(result);
+        Assert.Equal("Bob", JsonTestHelper.GetString(result[0], "name"));
+    }
+
+    [Fact]
+    public void Where_Predicate_MissingField_ReturnsEmpty()
+    {
+        int count = JsonQuery.Parse(_fixture.Json)
+            .From("employees")
+            .Where(n => n.Value<string>("nonexistent") == "x")
+            .Count();
+
+        Assert.Equal(0, count);
+    }
+
+    [Fact]
+    public void OrWhere_Predicate_UnionsResults()
+    {
+        int count = JsonQuery.Parse(_fixture.Json)
+            .From("employees")
+            .Where(n => n.Value<string>("name") == "Alice")
+            .OrWhere(n => n.Value<string>("name") == "Bob")
+            .Count();
+
+        Assert.Equal(2, count);
+    }
 
     [Fact]
     public void OrWhere_CombinesFilteredResults()
