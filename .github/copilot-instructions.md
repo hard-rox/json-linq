@@ -1,5 +1,9 @@
 # Copilot Instructions
 
+## Project Knowledge
+
+For detailed project context — architecture, build commands, implementation patterns, and test conventions — load the [json-linq skill](.github/skills/json-linq/SKILL.md) before starting any implementation work.
+
 ## Naming Conventions
 
 All public method names in `JsonLinq` must follow **C# LINQ naming exactly**.

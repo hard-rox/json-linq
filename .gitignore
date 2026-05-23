@@ -12,5 +12,18 @@ TestResults/
 artifacts/
 BenchmarkDotNet.Artifacts/
 coverage-report/
+publish/
 
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs and temp
+*.log
+*.tmp
+*.cache
+
+# Secrets
+.env
+.env.*
 
