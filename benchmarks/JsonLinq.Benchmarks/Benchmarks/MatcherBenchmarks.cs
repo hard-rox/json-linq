@@ -1,19 +1,17 @@
 using System.Text.Json.Nodes;
 using BenchmarkDotNet.Attributes;
-using JsonLinq.Core;
+using JsonLinq;
 
 namespace JsonLinq.Benchmarks.Benchmarks;
 
 [Config(typeof(JsonLinqBenchmarkConfig))]
 public class MatcherBenchmarks
 {
-    private Matcher _matcher = null!;
     private JsonNode? _testNode = null!;
 
     [GlobalSetup]
     public void Setup()
     {
-        _matcher = new Matcher();
         _testNode = JsonNode.Parse("""
         {
             "name": "Alice",
@@ -26,32 +24,32 @@ public class MatcherBenchmarks
     }
 
     [Benchmark]
-    public bool EqualityOperator()
+    public bool EqualityPredicate()
     {
-        return _matcher.IsMatch(_testNode, new JsonCondition("name", "==", "Alice"));
+        return _testNode.Value<string>("name") == "Alice";
     }
 
     [Benchmark]
-    public bool InequalityOperator()
+    public bool InequalityPredicate()
     {
-        return _matcher.IsMatch(_testNode, new JsonCondition("name", "!=", "Bob"));
+        return _testNode.Value<string>("name") != "Bob";
     }
 
     [Benchmark]
-    public bool GreaterThanOperator()
+    public bool GreaterThanPredicate()
     {
-        return _matcher.IsMatch(_testNode, new JsonCondition("age", ">", 25));
+        return _testNode.Value<int>("age") > 25;
     }
 
     [Benchmark]
-    public bool LessThanOperator()
+    public bool LessThanPredicate()
     {
-        return _matcher.IsMatch(_testNode, new JsonCondition("salary", "<", 100000));
+        return _testNode.Value<decimal>("salary") < 100000;
     }
 
     [Benchmark]
-    public bool ContainsOperator()
+    public bool ContainsPredicate()
     {
-        return _matcher.IsMatch(_testNode, new JsonCondition("name", "contains", "Ali"));
+        return _testNode.Value<string>("name")?.Contains("Ali") ?? false;
     }
 }

@@ -1,5 +1,5 @@
 using BenchmarkDotNet.Attributes;
-using JsonLinq.Core;
+using JsonLinq;
 
 namespace JsonLinq.Benchmarks.Benchmarks;
 

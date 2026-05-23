@@ -1,3 +1,4 @@
+using BenchmarkDotNet.Columns;
 using BenchmarkDotNet.Configs;
 using BenchmarkDotNet.Diagnosers;
 using BenchmarkDotNet.Exporters;
@@ -16,6 +17,9 @@ public sealed class JsonLinqBenchmarkConfig : ManualConfig
     {
         // ManualConfig drops all BenchmarkDotNet defaults; loggers must be added explicitly
         AddLogger(ConsoleLogger.Default);
+
+        // Restore default column providers (ManualConfig strips these)
+        AddColumnProvider(DefaultColumnProviders.Instance);
 
         // Diagnosers for memory allocation tracking
         AddDiagnoser(MemoryDiagnoser.Default);
