@@ -1,7 +1,7 @@
 using JsonLinq.Exceptions;
 using JsonLinq.Utilities;
 
-namespace JsonLinq.Core;
+namespace JsonLinq;
 
 /// <summary>
 /// Fluent query object for JSON data.
@@ -171,7 +171,7 @@ public sealed class JsonQuery
     }
 
     /// <summary>
-    /// Returns true when query has at least one result.
+    /// Returns true when a query has at least one result.
     /// </summary>
     public bool Exists() => _result.Count > 0;
 
@@ -224,7 +224,7 @@ public sealed class JsonQuery
     }
 
     /// <summary>
-    /// Returns max value for field.
+    /// Returns max value for a field.
     /// </summary>
     public decimal Max(string field)
     {

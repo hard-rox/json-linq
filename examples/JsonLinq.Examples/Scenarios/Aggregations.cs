@@ -1,5 +1,3 @@
-using JsonLinq.Core;
-
 namespace JsonLinq.Examples.Scenarios;
 
 public static class Aggregations
