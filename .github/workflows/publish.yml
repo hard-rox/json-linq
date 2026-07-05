@@ -9,9 +9,11 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    environment: production
     permissions:
       contents: read
       packages: write
+      id-token: write # enable GitHub OIDC token issuance for NuGet Trusted Publishing
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -21,23 +23,49 @@ jobs:
         with:
           dotnet-version: '10.0.x'
 
+      - name: Determine version
+        id: version
+        run: |
+          if [[ "${{ github.ref }}" == refs/tags/v* ]]; then
+            version="${GITHUB_REF_NAME#v}"
+            if [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?(\+[0-9A-Za-z.-]+)?$ ]]; then
+              echo "::error::Tag '$GITHUB_REF_NAME' is not a valid SemVer version (expected vX.Y.Z)."
+              exit 1
+            fi
+            echo "version=$version" >> "$GITHUB_OUTPUT"
+            echo "is-release=true" >> "$GITHUB_OUTPUT"
+            echo "Publishing version $version"
+          else
+            echo "version=0.0.0-ci" >> "$GITHUB_OUTPUT"
+            echo "is-release=false" >> "$GITHUB_OUTPUT"
+            echo "Non-tag run: build and test only, publishing is skipped."
+          fi
+
       - name: Restore
         run: dotnet restore JsonLinq.slnx
 
       - name: Build
-        run: dotnet build JsonLinq.slnx --configuration Release --no-restore
+        run: dotnet build JsonLinq.slnx --configuration Release --no-restore -p:Version=${{ steps.version.outputs.version }}
 
       - name: Test
         run: dotnet test tests/JsonLinq.Tests/JsonLinq.Tests.csproj --configuration Release --no-build
 
       - name: Pack
-        run: dotnet pack src/JsonLinq/JsonLinq.csproj --configuration Release --no-build --output ./artifacts
+        run: dotnet pack src/JsonLinq/JsonLinq.csproj --configuration Release --no-build --output ./artifacts -p:Version=${{ steps.version.outputs.version }}
+
+      - name: NuGet login (OIDC → short-lived API key)
+        if: ${{ steps.version.outputs.is-release == 'true' }}
+        uses: NuGet/login@v1
+        id: login
+        with:
+          user: ${{ secrets.NUGET_USER }}
 
       - name: Publish NuGet.org
-        if: ${{ secrets.NUGET_API_KEY != '' }}
-        run: dotnet nuget push "./artifacts/*.nupkg" --api-key "${{ secrets.NUGET_API_KEY }}" --source "https://api.nuget.org/v3/index.json" --skip-duplicate
+        if: ${{ steps.version.outputs.is-release == 'true' }}
+        run: dotnet nuget push "./artifacts/*.nupkg" --api-key "${{ steps.login.outputs.NUGET_API_KEY }}" --source "https://api.nuget.org/v3/index.json" --skip-duplicate
 
       - name: Publish GitHub Packages
+        if: ${{ steps.version.outputs.is-release == 'true' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: dotnet nuget push "./artifacts/*.nupkg" --api-key "$GITHUB_TOKEN" --source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" --skip-duplicate

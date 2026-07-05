@@ -32,6 +32,12 @@ dotnet run -p benchmarks/JsonLinq.Benchmarks/ -c Release
 
 Results are generated to `BenchmarkDotNet.Artifacts/results/index.html`.
 
+## Publishing
+
+Releases are published to NuGet.org and GitHub Packages by pushing a `vX.Y.Z`
+tag. Publishing uses NuGet Trusted Publishing (OIDC, keyless). See
+[docs/publishing.md](docs/publishing.md) for the full release process and setup.
+
 ## Suggested Copilot Skills from awesome-copilot
 
 - csharp-xunit

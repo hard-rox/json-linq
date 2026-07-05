@@ -6,7 +6,7 @@
     <Version>0.2.0</Version>
     <Authors>JsonLinq contributors</Authors>
     <Description>Fluent LINQ-like query API over JSON data.</Description>
-    <RepositoryUrl>https://github.com/OWNER/JsonLinq</RepositoryUrl>
+    <RepositoryUrl>https://github.com/hard-box/json-linq</RepositoryUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
