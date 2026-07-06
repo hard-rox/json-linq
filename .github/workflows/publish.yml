@@ -51,7 +51,7 @@ jobs:
         run: dotnet test tests/JsonLinq.Tests/JsonLinq.Tests.csproj --configuration Release --no-build
 
       - name: Pack
-        run: dotnet pack src/JsonLinq/JsonLinq.csproj --configuration Release --no-build --output ./artifacts -p:Version=${{ steps.version.outputs.version }}
+        run: dotnet pack src/JsonLinq/JsonLinq.csproj --configuration Release --no-build --output ./artifacts -p:Version=${{ steps.version.outputs.version }} -p:TargetFrameworks="net6.0;net8.0;net9.0;net10.0"
 
       - name: NuGet login (OIDC → short-lived API key)
         if: ${{ steps.version.outputs.is-release == 'true' }}
@@ -62,10 +62,10 @@ jobs:
 
       - name: Publish NuGet.org
         if: ${{ steps.version.outputs.is-release == 'true' }}
-        run: dotnet nuget push "./artifacts/*.nupkg" --api-key "${{ steps.login.outputs.NUGET_API_KEY }}" --source "https://api.nuget.org/v3/index.json" --skip-duplicate
+        run: dotnet nuget push "./artifacts/*.nupkg" --api-key "${{ steps.login.outputs.NUGET_API_KEY }}" --source "https://api.nuget.org/v3/index.json" --skip-duplicate --exclude-symbols
 
       - name: Publish GitHub Packages
         if: ${{ steps.version.outputs.is-release == 'true' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: dotnet nuget push "./artifacts/*.nupkg" --api-key "$GITHUB_TOKEN" --source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" --skip-duplicate
+        run: dotnet nuget push "./artifacts/*.nupkg" --api-key "$GITHUB_TOKEN" --source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" --skip-duplicate --exclude-symbols

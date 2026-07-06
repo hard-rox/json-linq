@@ -3,6 +3,7 @@
 ## Prerequisites
 
 - .NET 10 SDK
+- To run tests locally for all targets, install runtimes for `net6.0`, `net8.0`, and `net9.0` as well.
 
 ## Build
 
@@ -14,6 +15,12 @@ dotnet build JsonLinq.slnx
 
 ```bash
 dotnet test tests/JsonLinq.Tests/JsonLinq.Tests.csproj
+```
+
+Run a specific target framework:
+
+```bash
+dotnet test tests/JsonLinq.Tests/JsonLinq.Tests.csproj -f net10.0
 ```
 
 ## Run Example App

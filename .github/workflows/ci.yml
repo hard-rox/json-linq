@@ -2,15 +2,19 @@
 
 on:
   push:
-    branches: [ main ]
+    branches: [ "*" ]
   pull_request:
     branches: [ main ]
   workflow_dispatch:
 
 jobs:
   test:
-    name: Build, Test & Coverage
+    name: Build, Test & Coverage (${{ matrix.tfm }})
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        tfm: [net6.0, net8.0, net9.0, net10.0]
     permissions:
       contents: read
 
@@ -37,6 +41,7 @@ jobs:
           dotnet test tests/JsonLinq.Tests/JsonLinq.Tests.csproj
           --configuration Release
           --no-build
+          --framework ${{ matrix.tfm }}
           --collect:"XPlat Code Coverage"
           --results-directory TestResults
 
@@ -53,6 +58,6 @@ jobs:
       - name: Upload coverage report
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-report
+          name: coverage-report-${{ matrix.tfm }}
           path: coverage-report/
           retention-days: 14

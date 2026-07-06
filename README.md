@@ -6,6 +6,10 @@
 
 [![NuGet](https://img.shields.io/nuget/v/JsonLinq.svg)](https://www.nuget.org/packages/JsonLinq)
 
+- Repository: https://github.com/hard-rox/json-linq
+- NuGet package: https://www.nuget.org/packages/JsonLinq
+- Supported target frameworks: `net6.0`, `net8.0`, `net9.0`, `net10.0`
+
 ## Installation
 
 ```bash
@@ -541,7 +545,7 @@ string? city = node.ValueAt<string>("address.city"); // "San Francisco"
 
 ## Bugs and Issues
 
-If you encounter any bugs or issues, feel free to [open an issue on GitHub](https://github.com/roxy/json-linq/issues).
+If you encounter any bugs or issues, feel free to [open an issue on GitHub](https://github.com/hard-rox/json-linq/issues).
 
 ## Inspired By
 

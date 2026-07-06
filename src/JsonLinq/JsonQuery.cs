@@ -117,7 +117,7 @@ public sealed class JsonQuery
             .Select(x => new JsonObject
             {
                 ["key"] = x.Key,
-                ["items"] = new JsonArray(x.Value.Select(v => v?.DeepClone()).ToArray())
+                ["items"] = new JsonArray(x.Value.Select(CloneNode).ToArray())
             })
             .Cast<JsonNode?>()
             .ToList()
@@ -139,7 +139,7 @@ public sealed class JsonQuery
         List<JsonNode?> list = new List<JsonNode?>();
         for (int i = 0; i < _result.Count; i += size)
         {
-            list.Add(new JsonArray(_result.Skip(i).Take(size).Select(x => x?.DeepClone()).ToArray()));
+            list.Add(new JsonArray(_result.Skip(i).Take(size).Select(CloneNode).ToArray()));
         }
 
         ReadOnlyCollection<JsonNode?> readOnly = list.AsReadOnly();
@@ -151,9 +151,9 @@ public sealed class JsonQuery
     /// </summary>
     public JsonQuery Copy()
     {
-        JsonNode newRoot = _root.DeepClone();
-        ReadOnlyCollection<JsonNode?> newScope = _scope.Select(x => x?.DeepClone()).ToList().AsReadOnly();
-        ReadOnlyCollection<JsonNode?> newResult = _result.Select(x => x?.DeepClone()).ToList().AsReadOnly();
+        JsonNode newRoot = CloneNode(_root) ?? throw new JsonQueryException("Unable to clone root JSON node.");
+        ReadOnlyCollection<JsonNode?> newScope = _scope.Select(CloneNode).ToList().AsReadOnly();
+        ReadOnlyCollection<JsonNode?> newResult = _result.Select(CloneNode).ToList().AsReadOnly();
         return new JsonQuery(newRoot, newScope, newResult);
     }
 
@@ -256,7 +256,7 @@ public sealed class JsonQuery
                     JsonNode? value = PathResolver.Resolve(node, field);
                     if (value is not null)
                     {
-                        obj[field] = value.DeepClone();
+                        obj[field] = CloneNode(value);
                     }
                 }
 
@@ -360,5 +360,19 @@ public sealed class JsonQuery
 
             throw new JsonQueryException($"Value at '{path}' is not numeric.");
         }
+    }
+
+    private static JsonNode? CloneNode(JsonNode? node)
+    {
+        if (node is null)
+        {
+            return null;
+        }
+
+#if NET8_0_OR_GREATER
+        return node.DeepClone();
+#else
+        return JsonNode.Parse(node.ToJsonString());
+#endif
     }
 }

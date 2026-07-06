@@ -1,7 +1,7 @@
 # Publishing
 
 JsonLinq is published to [NuGet.org](https://www.nuget.org/) and to
-[GitHub Packages](https://github.com/hard-box/json-linq/packages) automatically
+[GitHub Packages](https://github.com/hard-rox/json-linq/packages) automatically
 by the [`Build Test Pack Publish`](../.github/workflows/publish.yml) GitHub
 Actions workflow whenever a version tag is pushed.
 
@@ -43,7 +43,7 @@ Log in to nuget.org → your username → **Trusted Publishing** → add a polic
 | Field            | Value           |
 | ---------------- | --------------- |
 | Publisher        | `GitHubActions` |
-| Repository Owner | `hard-box`      |
+| Repository Owner | `hard-rox`      |
 | Repository       | `json-linq`     |
 | Workflow         | `publish.yml`   |
 | Environment      | `production`    |
@@ -101,8 +101,15 @@ The [`publish.yml`](../.github/workflows/publish.yml) workflow runs on tag pushe
 3. **Restore**, **Build** (with `-p:Version=<tag>`), and **Test**.
 4. **Pack** the NuGet package (with `-p:Version=<tag>`) into `./artifacts`.
 5. **NuGet login (OIDC)** — exchanges the GitHub OIDC token for a short-lived key.
-6. **Publish NuGet.org** — pushes with the temporary key (`--skip-duplicate`).
-7. **Publish GitHub Packages** — pushes using the built-in `GITHUB_TOKEN`.
+6. **Publish NuGet.org** — pushes primary `.nupkg` files with the temporary key (`--skip-duplicate --exclude-symbols`).
+7. **Publish GitHub Packages** — pushes primary `.nupkg` files using the built-in `GITHUB_TOKEN` (`--exclude-symbols`).
+
+The package is multi-targeted and includes assets for:
+
+- `net6.0`
+- `net8.0`
+- `net9.0`
+- `net10.0`
 
 Publish steps only run for tag pushes. A manual `workflow_dispatch` on a branch
 builds and tests but **skips publishing** (there is no version to publish).
@@ -115,7 +122,7 @@ builds and tests but **skips publishing** (there is no version to publish).
   publish happens in that window the policy goes inactive; restart the window and
   publish again.
 - **`Unauthorized` / login fails.** Confirm the policy fields exactly match the
-  workflow: owner `hard-box`, repo `json-linq`, workflow `publish.yml`,
+  workflow: owner `hard-rox`, repo `json-linq`, workflow `publish.yml`,
   environment `production`. Confirm `NUGET_USER` is your nuget.org username, not
   your email.
 - **Temporary key expired.** The key lasts ~1 hour and is single-use. Keep the
