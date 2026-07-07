@@ -8,7 +8,7 @@
 
 - Repository: https://github.com/hard-rox/json-linq
 - NuGet package: https://www.nuget.org/packages/JsonLinq
-- Supported target frameworks: `net6.0`, `net8.0`, `net9.0`, `net10.0`
+- Supported target frameworks: `net8.0`, `net9.0`, `net10.0`
 
 ## Installation
 
