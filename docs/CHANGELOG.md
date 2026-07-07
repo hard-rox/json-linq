@@ -5,7 +5,7 @@
 ### Highlights
 
 - Stable fluent API over `System.Text.Json.Nodes` with immutable query chaining.
-- Multi-target support for `net6.0`, `net8.0`, `net9.0`, and `net10.0`.
+- Multi-target support for `net8.0`, `net9.0`, and `net10.0`.
 - Public API naming aligned with C# LINQ conventions (`Average`, `FirstOrDefault`, `LastOrDefault`, `SingleOrDefault`, `OrderBy`).
 - Package provenance improvements with SourceLink and repository metadata.
 

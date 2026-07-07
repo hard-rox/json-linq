@@ -106,7 +106,6 @@ The [`publish.yml`](../.github/workflows/publish.yml) workflow runs on tag pushe
 
 The package is multi-targeted and includes assets for:
 
-- `net6.0`
 - `net8.0`
 - `net9.0`
 - `net10.0`

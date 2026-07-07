@@ -3,7 +3,7 @@
 ## Prerequisites
 
 - .NET 10 SDK
-- To run tests locally for all targets, install runtimes for `net6.0`, `net8.0`, and `net9.0` as well.
+- To run tests locally for all targets, install runtimes for `net8.0` and `net9.0` as well.
 
 ## Build
 
