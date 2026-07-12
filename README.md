@@ -5,6 +5,8 @@
 > Inspired by [php-jsonq](https://github.com/nahid/jsonq) by [Nahid Bin Azhar](https://github.com/nahid).
 
 [![NuGet](https://img.shields.io/nuget/v/JsonLinq.svg)](https://www.nuget.org/packages/JsonLinq)
+![Contributors](https://img.shields.io/github/contributors/hard-rox/json-linq)
+![Downloads](https://img.shields.io/nuget/dt/JsonLinq)
 
 - Repository: https://github.com/hard-rox/json-linq
 - NuGet package: https://www.nuget.org/packages/JsonLinq
